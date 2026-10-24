@@ -1,5 +1,6 @@
 /**
- * Canvas Visual Engine: Core Plasma, Rotating Rings, Shockwaves & Spark Bursts
+ * ITea.inc Canvas Visual Engine
+ * Renders the interactive ITea Smart Mug, boiling liquid bubbles, rising steam and tea leaves.
  */
 
 export class CoreVisualizer {
@@ -9,16 +10,15 @@ export class CoreVisualizer {
     this.width = canvas.width = canvas.offsetWidth || 360;
     this.height = canvas.height = canvas.offsetHeight || 360;
 
-    this.sparks = [];
-    this.shockwaves = [];
-    this.stars = [];
-    this.rotationAngle1 = 0;
-    this.rotationAngle2 = 0;
-    this.rotationAngle3 = 0;
-    this.pulseScale = 1;
-    this.resonancePhase = 0; // For critical ring alignment
+    this.sparks = []; // Liquid droplets & splash
+    this.shockwaves = []; // Water ripples
+    this.steam = []; // Rising steam particles
+    this.leaves = []; // Ambient floating tea leaves
 
-    this.initStars();
+    this.orbitAngle = 0;
+    this.bubbleTimer = 0;
+
+    this.initSteamAndLeaves();
     this.handleResize = this.resize.bind(this);
     window.addEventListener('resize', this.handleResize);
   }
@@ -34,81 +34,82 @@ export class CoreVisualizer {
     this.ctx.scale(dpr, dpr);
   }
 
-  initStars() {
-    this.stars = [];
-    for (let i = 0; i < 40; i++) {
-      this.stars.push({
-        x: Math.random() * 400,
-        y: Math.random() * 400,
-        r: Math.random() * 1.5 + 0.5,
-        alpha: Math.random() * 0.7 + 0.3,
-        speed: Math.random() * 0.4 + 0.1
+  initSteamAndLeaves() {
+    this.leaves = [];
+    for (let i = 0; i < 16; i++) {
+      this.leaves.push({
+        x: Math.random() * 300,
+        y: Math.random() * 300,
+        r: Math.random() * 6 + 4,
+        angle: Math.random() * Math.PI * 2,
+        rotSpeed: (Math.random() - 0.5) * 0.04,
+        vx: (Math.random() - 0.5) * 0.5,
+        vy: Math.random() * 0.4 + 0.2
       });
     }
   }
 
-  // Triggered on click / tap
-  emitSparks(x, y, count = 12, isCrit = false, heatMultiplier = 1) {
+  // Triggered when user taps the mug
+  emitSparks(x, y, count = 10, isCrit = false, heatMultiplier = 1) {
     const rect = this.canvas.getBoundingClientRect();
     const localX = x !== undefined ? x - rect.left : this.width / 2;
     const localY = y !== undefined ? y - rect.top : this.height / 2;
 
     const baseColor = isCrit
-      ? '#ff007a'
+      ? '#ffd166' // Golden Leaf Crit
       : heatMultiplier >= 5
-      ? '#ffaa00'
-      : '#00f0ff';
+      ? '#fb8500' // Hot Amber
+      : '#70e000'; // Fresh Green Matcha
 
     for (let i = 0; i < count; i++) {
       const angle = Math.random() * Math.PI * 2;
-      const speed = Math.random() * (isCrit ? 8 : 4.5) + 2;
+      const speed = Math.random() * (isCrit ? 7 : 4) + 1.5;
       this.sparks.push({
         x: localX,
         y: localY,
         vx: Math.cos(angle) * speed,
-        vy: Math.sin(angle) * speed,
+        vy: Math.sin(angle) * speed - 1.5, // Splash upward
         size: Math.random() * (isCrit ? 4.5 : 3) + 1.5,
         color: baseColor,
         life: 1,
-        decay: Math.random() * 0.03 + 0.02
+        decay: Math.random() * 0.035 + 0.02
       });
     }
 
-    if (isCrit) {
-      this.shockwaves.push({
-        x: localX,
-        y: localY,
-        r: 10,
-        maxR: 90,
-        color: '#ff007a',
-        alpha: 1
-      });
-    }
+    // Ripple
+    this.shockwaves.push({
+      x: localX,
+      y: localY,
+      r: 10,
+      maxR: isCrit ? 85 : 55,
+      color: isCrit ? '#ffd166' : 'rgba(112, 224, 0, 0.8)',
+      alpha: 1
+    });
   }
 
   triggerBreachEffect() {
     const cx = this.width / 2;
     const cy = this.height / 2;
-    for (let i = 0; i < 70; i++) {
+    for (let i = 0; i < 60; i++) {
       const angle = Math.random() * Math.PI * 2;
-      const speed = Math.random() * 10 + 3;
+      const speed = Math.random() * 9 + 3;
       this.sparks.push({
         x: cx,
         y: cy,
         vx: Math.cos(angle) * speed,
         vy: Math.sin(angle) * speed,
         size: Math.random() * 5 + 2,
-        color: i % 2 === 0 ? '#ffaa00' : '#00f0ff',
+        color: i % 2 === 0 ? '#ffd166' : '#70e000',
         life: 1,
-        decay: Math.random() * 0.015 + 0.01
+        decay: Math.random() * 0.02 + 0.015
       });
     }
     this.shockwaves.push({
       x: cx,
       y: cy,
-      r: 20,
+      r: 15,
       maxR: 160,
-      color: '#ffffff',
+      color: '#00f0ff',
       alpha: 1
     });
   }
@@ -116,137 +117,195 @@ export class CoreVisualizer {
   render(state, dt) {
     const ctx = this.ctx;
     const cx = this.width / 2;
-    const cy = this.height / 2;
+    const cy = this.height / 2 + 10;
 
     ctx.clearRect(0, 0, this.width, this.height);
 
-    // Heat speed scaling
-    const heatRatio = state.heat / state.maxHeat;
-    const speedMult = 1 + heatRatio * 2.5;
+    const heatRatio = state.heat / state.maxHeat; // 0 to 1
+    this.orbitAngle += 0.015 * (1 + heatRatio * 2);
 
-    this.rotationAngle1 += 0.012 * speedMult;
-    this.rotationAngle2 -= 0.018 * speedMult;
-    this.rotationAngle3 += 0.025 * speedMult;
-    this.resonancePhase = (this.resonancePhase + 0.03) % (Math.PI * 2);
-
-    // 1. Ambient Stardust
-    ctx.fillStyle = '#00f0ff';
-    for (const star of this.stars) {
-      star.y += star.speed;
-      if (star.y > this.height) star.y = 0;
-      ctx.globalAlpha = star.alpha * 0.4;
-      ctx.beginPath();
-      ctx.arc(star.x, star.y, star.r, 0, Math.PI * 2);
-      ctx.fill();
+    // 1. Steam Generator (rises from top of mug)
+    if (Math.random() < 0.35 + heatRatio * 0.5) {
+      this.steam.push({
+        x: cx + (Math.random() - 0.5) * 70,
+        y: cy - 75,
+        vx: (Math.random() - 0.5) * 0.8,
+        vy: -(Math.random() * 1.5 + 1.2 + heatRatio * 2),
+        r: Math.random() * 8 + 6,
+        alpha: 0.65,
+        decay: 0.012 + Math.random() * 0.008
+      });
     }
-    ctx.globalAlpha = 1;
 
-    // 2. Quantum Resonance Ring (timing sweet spot ring)
-    // Pulsing rhythm ring
-    const resonanceR = 75 + Math.sin(this.resonancePhase) * 18;
-    ctx.save();
-    ctx.beginPath();
-    ctx.arc(cx, cy, resonanceR, 0, Math.PI * 2);
-    ctx.strokeStyle = `rgba(0, 240, 255, ${0.15 + (Math.sin(this.resonancePhase) + 1) * 0.15})`;
-    ctx.lineWidth = 1.5;
-    ctx.setLineDash([4, 6]);
-    ctx.stroke();
-    ctx.restore();
+    // Render Steam
+    for (let i = this.steam.length - 1; i >= 0; i--) {
+      const s = this.steam[i];
+      s.x += s.vx + Math.sin(Date.now() * 0.003 + s.y * 0.05) * 0.4;
+      s.y += s.vy;
+      s.r += 0.25;
+      s.alpha -= s.decay;
 
-    // 3. Containment Layer Outer Ring
+      if (s.alpha <= 0 || s.y < 0) {
+        this.steam.splice(i, 1);
+        continue;
+      }
+
+      ctx.save();
+      ctx.globalAlpha = s.alpha * 0.5;
+      ctx.fillStyle = heatRatio > 0.6 ? '#ffb703' : 'rgba(230, 245, 235, 0.9)';
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    }
+
+    // 2. Ambient Falling Tea Leaves
+    for (const leaf of this.leaves) {
+      leaf.y += leaf.vy;
+      leaf.x += leaf.vx;
+      leaf.angle += leaf.rotSpeed;
+      if (leaf.y > this.height + 20) {
+        leaf.y = -20;
+        leaf.x = Math.random() * this.width;
+      }
+
+      ctx.save();
+      ctx.translate(leaf.x, leaf.y);
+      ctx.rotate(leaf.angle);
+      ctx.globalAlpha = 0.25;
+      ctx.fillStyle = '#70e000';
+      ctx.beginPath();
+      ctx.ellipse(0, 0, leaf.r, leaf.r * 0.45, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    }
+
+    // 3. Tea_VPN Orbiting Cyber Rings (Secure Infusion Mesh)
     ctx.save();
     ctx.translate(cx, cy);
-    ctx.rotate(this.rotationAngle1);
+    ctx.rotate(this.orbitAngle);
     ctx.beginPath();
     ctx.arc(0, 0, 115, 0, Math.PI * 2);
-    ctx.strokeStyle = heatRatio > 0.6 ? '#ffaa00' : 'rgba(0, 240, 255, 0.4)';
+    ctx.strokeStyle = state.isVpnActive ? '#00f0ff' : 'rgba(112, 224, 0, 0.35)';
     ctx.lineWidth = 2.5;
-    ctx.setLineDash([30, 20, 10, 20]);
+    ctx.setLineDash([20, 15, 6, 15]);
     ctx.stroke();
 
-    // 4 containment brackets
-    for (let i = 0; i < 4; i++) {
-      ctx.rotate(Math.PI / 2);
-      ctx.fillStyle = heatRatio > 0.8 ? '#ff0055' : '#00f0ff';
-      ctx.fillRect(-4, -122, 8, 14);
+    // Orbiting VPN Encryption Nodes
+    for (let i = 0; i < 3; i++) {
+      ctx.rotate((Math.PI * 2) / 3);
+      ctx.fillStyle = state.isVpnActive ? '#00f0ff' : '#70e000';
+      ctx.shadowColor = ctx.fillStyle;
+      ctx.shadowBlur = 10;
+      ctx.beginPath();
+      ctx.arc(115, 0, 6, 0, Math.PI * 2);
+      ctx.fill();
     }
     ctx.restore();
 
-    // 4. Middle Plasma Turbine Ring
+    // 4. Smart Mug Render (Central Clickable Object)
     ctx.save();
-    ctx.translate(cx, cy);
-    ctx.rotate(this.rotationAngle2);
+    const mugW = 120;
+    const mugH = 130;
+    const mugX = cx - mugW / 2;
+    const mugY = cy - mugH / 2;
+
+    // Handle
     ctx.beginPath();
-    ctx.arc(0, 0, 92, 0, Math.PI * 2);
-    ctx.strokeStyle = state.isSkillActive ? '#ff007a' : 'rgba(121, 40, 202, 0.65)';
+    ctx.lineWidth = 14;
+    ctx.strokeStyle = '#1b2a1e';
+    ctx.arc(cx + 65, cy, 32, -Math.PI / 2.3, Math.PI / 2.3);
+    ctx.stroke();
+    ctx.lineWidth = 3;
+    ctx.strokeStyle = '#70e000';
+    ctx.stroke();
+
+    // Mug Outer Body (Ceramic / Dark Glass)
+    ctx.fillStyle = '#0f1812';
+    ctx.strokeStyle = state.isVpnActive ? '#00f0ff' : (heatRatio > 0.8 ? '#ffb703' : '#70e000');
     ctx.lineWidth = 4;
-    ctx.setLineDash([60, 30, 15, 30]);
+    ctx.shadowColor = ctx.strokeStyle;
+    ctx.shadowBlur = 15;
+
+    ctx.beginPath();
+    ctx.roundRect(mugX, mugY, mugW, mugH, [8, 8, 32, 32]);
+    ctx.fill();
     ctx.stroke();
-    ctx.restore();
 
-    // 5. Inner Core Glow & Energy Pulsing Sphere
-    const baseR = 48 + heatRatio * 12 + Math.sin(Date.now() * 0.005) * 3;
-    const grad = ctx.createRadialGradient(cx, cy, baseR * 0.1, cx, cy, baseR * 1.5);
+    // Tea Liquid inside the Mug
+    const liquidH = mugH * 0.72;
+    const liquidY = mugY + (mugH - liquidH) - 4;
+    const liquidGrad = ctx.createLinearGradient(0, liquidY, 0, liquidY + liquidH);
 
-    let coreColorCenter = '#ffffff';
-    let coreColorMid = '#00f0ff';
-    let coreColorOuter = 'rgba(0, 240, 255, 0)';
-
-    if (state.comboMultiplier >= 8) {
-      coreColorMid = '#ffaa00';
-      coreColorCenter = '#fff4cc';
-    } else if (state.comboMultiplier >= 4) {
-      coreColorMid = '#ff007a';
+    if (heatRatio > 0.75) {
+      liquidGrad.addColorStop(0, '#ffd166');
+      liquidGrad.addColorStop(0.5, '#fb8500');
+      liquidGrad.addColorStop(1, '#d45b00');
+    } else {
+      liquidGrad.addColorStop(0, '#ffb703');
+      liquidGrad.addColorStop(0.5, '#70e000');
+      liquidGrad.addColorStop(1, '#38b000');
     }
-
-    grad.addColorStop(0, coreColorCenter);
-    grad.addColorStop(0.35, coreColorMid);
-    grad.addColorStop(0.7, 'rgba(121, 40, 202, 0.4)');
-    grad.addColorStop(1, coreColorOuter);
 
     ctx.save();
     ctx.beginPath();
-    ctx.arc(cx, cy, baseR * 1.5, 0, Math.PI * 2);
-    ctx.fillStyle = grad;
+    ctx.roundRect(mugX + 8, liquidY, mugW - 16, liquidH, [4, 4, 26, 26]);
+    ctx.fillStyle = liquidGrad;
+    ctx.shadowBlur = 0;
     ctx.fill();
 
-    // Inner bright kernel
-    ctx.beginPath();
-    ctx.arc(cx, cy, baseR * 0.45, 0, Math.PI * 2);
+    // Tea Leaf Emblazoned on Mug
+    const leafX = cx;
+    const leafY = cy + 18;
     ctx.fillStyle = '#ffffff';
-    ctx.shadowColor = coreColorMid;
-    ctx.shadowBlur = 20;
+    ctx.globalAlpha = 0.9;
+    ctx.beginPath();
+    ctx.moveTo(leafX, leafY - 18);
+    ctx.quadraticCurveTo(leafX - 18, leafY, leafX, leafY + 18);
+    ctx.quadraticCurveTo(leafX + 18, leafY, leafX, leafY - 18);
     ctx.fill();
     ctx.restore();
 
-    // 6. Shockwaves
+    // 5. Boiling Bubbles inside tea liquid
+    this.bubbleTimer += dt * (2 + heatRatio * 8);
+    if (this.bubbleTimer > 0.4) {
+      this.bubbleTimer = 0;
+      this.sparks.push({
+        x: mugX + 18 + Math.random() * (mugW - 36),
+        y: liquidY + liquidH - 8,
+        vx: (Math.random() - 0.5) * 0.6,
+        vy: -(Math.random() * 2 + 1 + heatRatio * 3),
+        size: Math.random() * 3 + 2,
+        color: '#ffffff',
+        life: 0.9,
+        decay: 0.04
+      });
+    }
+
+    // 6. Ripples / Shockwaves
     for (let i = this.shockwaves.length - 1; i >= 0; i--) {
       const sw = this.shockwaves[i];
-      sw.r += 3.5;
-      sw.alpha -= 0.035;
-
+      sw.r += 3;
+      sw.alpha -= 0.04;
       if (sw.alpha <= 0 || sw.r >= sw.maxR) {
         this.shockwaves.splice(i, 1);
         continue;
       }
-
       ctx.save();
       ctx.beginPath();
       ctx.arc(sw.x, sw.y, sw.r, 0, Math.PI * 2);
       ctx.strokeStyle = sw.color;
       ctx.globalAlpha = sw.alpha;
-      ctx.lineWidth = 3;
+      ctx.lineWidth = 2.5;
       ctx.stroke();
       ctx.restore();
     }
 
-    // 7. Sparks / Particle Bursts
+    // 7. Splash Drops & Bubbles
     for (let i = this.sparks.length - 1; i >= 0; i--) {
       const p = this.sparks[i];
       p.x += p.vx;
       p.y += p.vy;
-      p.vx *= 0.94;
-      p.vy *= 0.94;
       p.life -= p.decay;
 
       if (p.life <= 0) {
@@ -257,13 +316,13 @@ export class CoreVisualizer {
       ctx.save();
       ctx.globalAlpha = p.life;
       ctx.fillStyle = p.color;
-      ctx.shadowColor = p.color;
-      ctx.shadowBlur = 8;
       ctx.beginPath();
       ctx.arc(p.x, p.y, p.size * p.life, 0, Math.PI * 2);
       ctx.fill();
       ctx.restore();
     }
+
+    ctx.restore();
   }
 
   destroy() {

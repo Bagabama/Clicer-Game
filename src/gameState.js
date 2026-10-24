@@ -1,276 +1,276 @@
 /**
- * Core Ignition - Game State, Economy, Containment Layers, Upgrades & Prestige
+ * ITea.inc - Game State, Tea Economy, Ceremonial Tiers, Upgrades & Franchise Prestige
  */
 
 export const CONTAINMENT_LAYERS = [
   {
     id: 1,
-    name: 'Крио-Оболочка (Cryo Shell)',
-    energyReq: 1000,
-    perk: '+20% к базовой силе активного клика',
-    desc: 'Замёрзшая внешняя кора реактора. Растопите её кинетическими импульсами.',
-    color: '#00f0ff'
+    name: 'Пакетик «Майский Жмых»',
+    energyReq: 500,
+    perk: '+20% к базовой силе ручной заварки',
+    desc: 'Пластиковый стаканчик и безымянный пакетик из кладовки стартапа. Начало пути ITea.inc!',
+    color: '#a3b18a'
   },
   {
     id: 2,
-    name: 'Магнитная Решётка (Magnetic Mesh)',
-    energyReq: 8500,
-    perk: 'Разблокировка навыка «Тепловой Перегруз»',
-    desc: 'Силовое поле, сдерживающее первичную плазму. Пробейте контур поля.',
-    color: '#00e5ff'
+    name: 'Офисный Липтон из кулера',
+    energyReq: 4000,
+    perk: 'Разблокировка навыка «Оверклок Чайника»',
+    desc: 'Классический чай программистов под дедлайн. Вода еле теплая, но кофеин бодрит.',
+    color: '#ffb703'
   },
   {
     id: 3,
-    name: 'Плазменная Мантия (Plasma Mantle)',
-    energyReq: 65000,
-    perk: 'Максимальный множитель Комбо повышен до 7.5x',
-    desc: 'Слой бурлящего звёздного гелия. Скорость нагрева ядра возрастает.',
-    color: '#38ef7d'
+    name: 'Зеленый Сенча с дедлайном',
+    energyReq: 30000,
+    perk: 'Максимальная температура заварки поднята до 7.5x',
+    desc: 'Настоящие японские листья, заряженные на исправление критических багов в проде.',
+    color: '#70e000'
   },
   {
     id: 4,
-    name: 'Тахионный Каркас (Tachyon Lattice)',
-    energyReq: 450000,
-    perk: '+10% к шансу критического удара',
-    desc: 'Квантовая структура сверхсветовых частиц. Синхронизирует резонанс кликов.',
-    color: '#9d4edd'
+    name: 'Габа Улун с нейростимулятором',
+    energyReq: 220000,
+    perk: '+10% к шансу Идеальной Заварки (крита)',
+    desc: 'Чай с гамма-аминомасляной кислотой для Senior Architect. Полная концентрация мысли.',
+    color: '#38b000'
   },
   {
     id: 5,
-    name: 'Гравитонный Щит (Graviton Shell)',
-    energyReq: 3200000,
-    perk: 'Разблокировка навыка «Квантовый Резонанс»',
-    desc: 'Тяжелая гравитационная ловушка ядра. Требует предельной концентрации импульсов.',
-    color: '#ff007a'
+    name: 'Да Хун Пао Архитектора',
+    energyReq: 1600000,
+    perk: 'Разблокировка навыка «Tea_VPN Hyper-Tunnel»',
+    desc: 'Утёсный чай с горы Уи. Туннелирует заварку прямо в мозг разработчика.',
+    color: '#e76f51'
   },
   {
     id: 6,
-    name: 'Хроно-Демпфер (Chrono Dampener)',
-    energyReq: 24000000,
-    perk: 'Скорость остывания комбо снижена на 40%',
-    desc: 'Искривляет время вокруг ядра, позволяя удерживать Overclock намного дольше.',
-    color: '#ff5400'
+    name: 'Маття Латте из коворкинга',
+    energyReq: 12000000,
+    perk: 'Чай в кружке остывает на 40% медленнее',
+    desc: 'Взбитая пудра маття на кокосовом молоке. Модно, стильно, долго держит тепло.',
+    color: '#588157'
   },
   {
     id: 7,
-    name: 'Кварковый Конденсатор (Quark Condenser)',
-    energyReq: 180000000,
-    perk: 'Квантовые искры появляются в 2 раза чаще',
-    desc: 'Генератор микро-аномалий. Вызывает частые блуждающие плазменные сгустки.',
-    color: '#ffaa00'
+    name: 'Пуэр 2008 года с криптофермы',
+    energyReq: 90000000,
+    perk: 'Золотые чайные пакетики появляются в 2 раза чаще',
+    desc: 'Выдержанный блин шу-пуэра, хранившийся рядом с видеокартами во время майнинг-бума.',
+    color: '#6f1d1b'
   },
   {
     id: 8,
-    name: 'Горизонт Событий (Event Horizon)',
-    energyReq: 1500000000,
-    perk: 'Разблокировка навыка «Сингулярный Взрыв»',
-    desc: 'Рубеж, за которым свет не может вырваться наружу. Последняя ограда ядра.',
-    color: '#d00000'
+    name: 'Чай на слезах джуниоров',
+    energyReq: 750000000,
+    perk: 'Разблокировка навыка «Тайфун Заварки»',
+    desc: 'Квантовый напиток, полученный после ночного деплоя в пятницу вечером.',
+    color: '#00f0ff'
   },
   {
     id: 9,
-    name: 'Мембрана Пустоты (Void Membrane)',
-    energyReq: 12000000000,
-    perk: 'Критические удары наносят утроенный урон (x3)',
-    desc: 'Темная материя сжимает сингулярность до атомной точки. Пробейте её!',
-    color: '#7209b7'
+    name: 'Императорский Драконий Чай CEO',
+    energyReq: 6000000000,
+    perk: 'Идеальные заварки дают утроенный объём (x3)',
+    desc: 'Эксклюзивный сорт для совета директоров Кремниевой Долины. Вкус венчурных инвестиций.',
+    color: '#ffd166'
   },
   {
     id: 10,
-    name: 'Омега-Ядро Сингулярности (Omega Core)',
-    energyReq: 100000000000,
-    perk: '100% Зажигание достигнуто! Сверхновая вспышка готова!',
-    desc: 'Полный триумф технологии. Ядро готово вспыхнуть новой галактической звездой!',
+    name: 'Чайная Сингулярность ITea.inc',
+    energyReq: 50000000000,
+    perk: '100% Заварка Достигнута! Время выходить на IPO и строить глобальную франшизу!',
+    desc: 'Абсолютная гармония кода и чайного листа. Все сертифицированные чайники планеты подключены к Tea_VPN.',
     color: '#ffffff'
   }
 ];
 
 export const UPGRADE_DEFINITIONS = [
   {
-    id: 'kinetic_actuator',
-    name: 'Кинетический Привод',
+    id: 'kinetic_spoon',
+    name: 'Кинетическая Чайная Ложечка',
     category: 'active',
     baseCost: 15,
     costMult: 1.15,
     clickBonus: 1,
     passiveBonus: 0,
-    desc: 'Усиливает тактильный импульс каждого нажатия на +1 энергии.'
+    desc: 'Каждое перемешивание заваривает на +1 мл чая больше.'
   },
   {
-    id: 'thermal_coil',
-    name: 'Термо-Индуктор',
+    id: 'smart_mug_heater',
+    name: 'Кружка с USB-подогревом',
     category: 'active',
-    baseCost: 80,
-    costMult: 1.17,
+    baseCost: 75,
+    costMult: 1.16,
     clickBonus: 4,
-    passiveBonus: 0.2,
-    desc: 'Накапливает тепло активных нажатий. +4 к клику, ускоряет комбо.'
+    passiveBonus: 0.3,
+    desc: 'Подключается к ноутбуку. +4 мл к клику, помогает удерживать кипение.'
   },
   {
-    id: 'drone_unit',
-    name: 'Нано-Дрон Поддержки',
+    id: 'intern_with_kettle',
+    name: 'Стажер с электрочайником',
     category: 'passive',
-    baseCost: 250,
+    baseCost: 240,
     costMult: 1.18,
     clickBonus: 2,
     passiveBonus: 3,
-    desc: 'Микро-дрон пассивной накачки (+3/сек), дублирующий часть ваших кликов (+2 к клику).'
+    desc: 'Джуниор регулярно подливает кипяток (+3 мл/с) и дублирует тапы (+2 к клику).'
   },
   {
-    id: 'plasma_injector',
-    name: 'Плазменный Инжектор',
+    id: 'pressure_infuser',
+    name: 'Чайный Пресс-Инжектор',
     category: 'active',
-    baseCost: 1100,
+    baseCost: 1000,
     costMult: 1.20,
     clickBonus: 18,
     passiveBonus: 1,
-    desc: 'Впрыскивает супер-горячий дейтерий прямо в точку удара. +18 к силе клика.'
+    desc: 'Выжимает из чайных листьев всё до последней капли. +18 мл к силе клика.'
   },
   {
-    id: 'resonance_coupler',
-    name: 'Резонансный Контур',
+    id: 'wifi_tea_strainer',
+    name: 'Умное Ситечко с Wi-Fi',
     category: 'active',
-    baseCost: 5200,
+    baseCost: 4800,
     costMult: 1.22,
     clickBonus: 65,
     passiveBonus: 5,
-    desc: 'Создает акустический резонанс в ядре. +65 к клику, +1.5% крит. шанс.'
+    desc: 'Фильтрует чаинки на наноуровне. +65 мл к клику, +1.5% крит. шанс.'
   },
   {
-    id: 'solar_siphon',
-    name: 'Солнечный Сифон',
+    id: 'office_tea_cooler',
+    name: 'Кулер с протоколом ITea',
     category: 'passive',
-    baseCost: 24000,
+    baseCost: 22000,
     costMult: 1.24,
     clickBonus: 40,
     passiveBonus: 45,
-    desc: 'Орбитальная ловушка фотонов. +45/сек, увеличивает награду за квантовые искры.'
+    desc: 'Офисная станция заварки. +45 мл/с, увеличивает награду за Золотые Пакетики.'
   },
   {
-    id: 'hyper_piston',
-    name: 'Гипер-Поршень Сингулярности',
+    id: 'tea_vpn_node',
+    name: 'Серверная Нода Tea_VPN',
     category: 'active',
-    baseCost: 110000,
+    baseCost: 105000,
     costMult: 1.25,
     clickBonus: 320,
     passiveBonus: 15,
-    desc: 'Мощный квантовый пресс. +320 к клику, +30% к урону критических ударов.'
+    desc: 'Сверхзащищенный туннель доставки чая. +320 мл к клику, +30% к урону крита.'
   },
   {
-    id: 'dark_fusion_cell',
-    name: 'Темноплазменный Реактор',
+    id: 'auto_brewing_rack',
+    name: 'Чайный Серверный Стеллаж',
     category: 'passive',
-    baseCost: 650000,
+    baseCost: 600000,
     costMult: 1.27,
     clickBonus: 450,
     passiveBonus: 350,
-    desc: 'Генерирует стабильный поток энергии (+350/сек) и передает 10% в силу клика (+450 к клику).'
+    desc: 'Стойка 42U, где вместо блейд-серверов заваривается элитный улун (+350 мл/с).'
   },
   {
-    id: 'antimatter_drill',
-    name: 'Антиматерийный Бур',
+    id: 'tannin_accelerator',
+    name: 'Гипер-Ускоритель Танина',
     category: 'active',
-    baseCost: 3500000,
+    baseCost: 3200000,
     costMult: 1.30,
     clickBonus: 2800,
     passiveBonus: 100,
-    desc: 'Концентрированный луч позитронов. Колоссальный прирост к активному клику: +2800.'
+    desc: 'Ядерный распад чайного кофеина. Гигантский прирост к заварке: +2,800 мл.'
   },
   {
-    id: 'chronos_core',
-    name: 'Ячейка Хроно-Сдвига',
+    id: 'quantum_tea_rig',
+    name: 'Квантовая Чайная Станция',
     category: 'active',
-    baseCost: 22000000,
+    baseCost: 20000000,
     costMult: 1.32,
     clickBonus: 16000,
     passiveBonus: 800,
-    desc: 'Позволяет каждому клику сжимать временной континуум. +16,000 к клику!'
+    desc: 'Заваривает чай во всех параллельных ветках Git одновременно: +16,000 мл!'
   }
 ];
 
 export const SKILL_DEFINITIONS = [
   {
     id: 'overdrive',
-    name: 'Тепловой Локдаун',
+    name: 'Оверклок Чайника',
     duration: 12,
-    cooldown: 45,
-    desc: 'Мгновенно заполняет шкалу Комбо на максимум и замораживает её спад на 12 секунд.',
+    cooldown: 40,
+    desc: 'Мгновенно доводит чайник до 100°C и блокирует остывание на 12 секунд.',
     reqLayer: 2
   },
   {
-    id: 'quantum_resonance',
-    name: 'Квантовый Залп',
+    id: 'vpn_tunnel',
+    name: 'Tea_VPN Hyper-Tunnel',
     duration: 10,
-    cooldown: 60,
-    desc: 'Каждый клик вызывает 4 дополнительных эхо-удара по ядру с удвоенной мощностью.',
+    cooldown: 55,
+    desc: 'Туннелирует чай через Tea_VPN. Каждый клик наносит 4 эхо-заварки с удвоенной силой.',
     reqLayer: 5
   },
   {
-    id: 'singularity_warp',
-    name: 'Сингулярный Взрыв',
+    id: 'tea_typhoon',
+    name: 'Тайфун Заварки',
     duration: 15,
-    cooldown: 90,
-    desc: 'Шанс критического удара равен 100%, а критический урон увеличен в 2.5 раза!',
+    cooldown: 85,
+    desc: 'Каждый клик становится Идеальной Заваркой (100% крит) с множителем x2.5!',
     reqLayer: 8
   }
 ];
 
 export const MASTERY_TREE = [
   {
-    id: 'kinetic_mastery',
-    name: 'Кинетическая Экспансия',
+    id: 'barista_mastery',
+    name: 'Чайный Бариста ITea',
     cost: 5,
     costMult: 2.2,
     maxRank: 10,
-    desc: '+35% к базовой силе активного клика за ранг.'
+    desc: '+35% к базовой силе ручной заварки за ранг.'
   },
   {
-    id: 'combo_endurance',
-    name: 'Термическая Стойкость',
+    id: 'thermal_insulation',
+    name: 'Двойная Термоизоляция',
     cost: 8,
     costMult: 2.5,
     maxRank: 5,
-    desc: 'Замедляет остывание комбо на 25% и повышает макс. множитель на +1x за ранг.'
+    desc: 'Замедляет остывание чайника на 25% и повышает макс. множитель на +1x за ранг.'
   },
   {
-    id: 'critical_annihilation',
-    name: 'Критическая Аннигиляция',
+    id: 'golden_leaf_crit',
+    name: 'Идеальная Заварка',
     cost: 15,
     costMult: 2.8,
     maxRank: 8,
     desc: '+4% к шансу крита и +50% к критическому множителю за ранг.'
   },
   {
-    id: 'spark_flux',
-    name: 'Поток Квантовых Искр',
+    id: 'tea_bag_flux',
+    name: 'Умные Чайные Пакетики',
     cost: 12,
     costMult: 2.2,
     maxRank: 5,
-    desc: 'Квантовые аномалии появляются на 25% чаще и дают на 50% больше энергии за ранг.'
+    desc: 'Золотые пакетики появляются на 25% чаще и дают на 50% больше чая за ранг.'
   },
   {
-    id: 'active_catalyst',
-    name: 'Активный Катализатор',
+    id: 'franchise_capital',
+    name: 'Венчурный Капитал ITea',
     cost: 25,
     costMult: 3.0,
     maxRank: 5,
-    desc: 'Каждый активный клик наносит на 20% больше урона текущему Слою Удержания.'
+    desc: 'Каждый клик дает на 20% больше прогресса к текущему чайному грейду.'
   }
 ];
 
 export class GameState {
   constructor() {
-    this.energy = 0;
+    this.energy = 0; // ml of tea brewed
     this.totalEnergyEarned = 0;
     this.totalClicks = 0;
     this.totalCrits = 0;
-    this.stellarDarkMatter = 0;
+    this.stellarDarkMatter = 0; // Golden Tea Leaves (GTL)
     this.totalSDMEarned = 0;
-    this.supernovaCount = 0;
+    this.supernovaCount = 0; // Franchises launched
 
-    // Containment Layer tracking
+    // Ceremonial Tier tracking
     this.currentLayerIndex = 0;
-    this.layerProgress = 0; // Energy accumulated towards current layer
+    this.layerProgress = 0; // ml towards current tier
 
     // Upgrades: map of upgradeId -> rank
     this.upgrades = {};
@@ -280,11 +280,14 @@ export class GameState {
     this.masteries = {};
     MASTERY_TREE.forEach(m => this.masteries[m.id] = 0);
 
-    // Heat & Combo system
+    // Boil temperature / Combo heat
     this.heat = 0;
     this.maxHeat = 100;
     this.comboMultiplier = 1;
-    this.comboTier = 1;
+
+    // Tea_VPN Ad Boost status
+    this.isVpnAdActive = false;
+    this.vpnAdTimer = 0;
 
     // Skills: skillId -> { active: boolean, activeTimer: number, cooldownTimer: number }
     this.skills = {};
@@ -292,7 +295,7 @@ export class GameState {
       this.skills[s.id] = { active: false, activeTimer: 0, cooldownTimer: 0 };
     });
 
-    // Offline / Timestamp
+    // Offline tracking
     this.lastTimestamp = Date.now();
     this.lastSaved = Date.now();
   }
@@ -300,7 +303,7 @@ export class GameState {
   // Load from LocalStorage
   load() {
     try {
-      const data = localStorage.getItem('core_ignition_save_v1');
+      const data = localStorage.getItem('itea_inc_save_v1');
       if (data) {
         const parsed = JSON.parse(data);
         this.energy = Number(parsed.energy) || 0;
@@ -349,21 +352,20 @@ export class GameState {
         masteries: this.masteries,
         lastSaved: Date.now()
       };
-      localStorage.setItem('core_ignition_save_v1', JSON.stringify(data));
+      localStorage.setItem('itea_inc_save_v1', JSON.stringify(data));
       this.lastSaved = Date.now();
     } catch (e) {
       console.error('Error saving game:', e);
     }
   }
 
-  // Calculate Offline Earnings (Strict Anti-Idle penalty: 5% efficiency, max 30 min)
+  // Offline calculation (Anti-Idle: 5% efficiency, max 30 min)
   processOfflineEarnings() {
     const now = Date.now();
     const elapsedSeconds = Math.max(0, (now - this.lastSaved) / 1000);
 
-    // If away for more than 15 seconds
     if (elapsedSeconds > 15) {
-      const MAX_OFFLINE_SECONDS = 1800; // 30 minutes cap
+      const MAX_OFFLINE_SECONDS = 1800; // 30 minutes
       const cappedSeconds = Math.min(elapsedSeconds, MAX_OFFLINE_SECONDS);
       const OFFLINE_PENALTY_EFFICIENCY = 0.05; // 5% efficiency!
 
@@ -384,7 +386,6 @@ export class GameState {
     return null;
   }
 
-  // Upgrade Cost Calculation
   getUpgradeCost(upgradeDef) {
     const rank = this.upgrades[upgradeDef.id] || 0;
     return Math.floor(upgradeDef.baseCost * Math.pow(upgradeDef.costMult, rank));
@@ -402,7 +403,6 @@ export class GameState {
     return false;
   }
 
-  // Mastery Tree Cost Calculation
   getMasteryCost(masteryDef) {
     const rank = this.masteries[masteryDef.id] || 0;
     return Math.floor(masteryDef.cost * Math.pow(masteryDef.costMult, rank));
@@ -422,33 +422,35 @@ export class GameState {
     return false;
   }
 
-  // Calculate Base Click Power before combo & crits
   calculateBaseClickPower() {
     let power = 1;
 
-    // Upgrades
     UPGRADE_DEFINITIONS.forEach(u => {
       const rank = this.upgrades[u.id] || 0;
       power += rank * u.clickBonus;
     });
 
-    // Layer 1 Perk: +20%
+    // Tier 1 Perk: +20%
     if (this.currentLayerIndex >= 1) {
       power *= 1.20;
     }
 
-    // Kinetic Mastery: +35% per rank
-    const kmRank = this.masteries['kinetic_mastery'] || 0;
-    power *= (1 + kmRank * 0.35);
+    // Barista Mastery: +35% per rank
+    const bmRank = this.masteries['barista_mastery'] || 0;
+    power *= (1 + bmRank * 0.35);
 
     // Passive Synergy: 10% of passive power added to click
     const passive = this.calculatePassivePerSec();
     power += passive * 0.10;
 
+    // Tea_VPN Ad Turbo Boost: +50%
+    if (this.isVpnAdActive) {
+      power *= 1.5;
+    }
+
     return Math.max(1, power);
   }
 
-  // Calculate Passive Generation per second
   calculatePassivePerSec() {
     let passive = 0;
     UPGRADE_DEFINITIONS.forEach(u => {
@@ -458,85 +460,80 @@ export class GameState {
     return passive;
   }
 
-  // Calculate Crit Chance (0 to 1)
   calculateCritChance() {
-    let chance = 0.08; // Base 8%
+    let chance = 0.08;
 
-    // Tachyon Lattice layer perk (+10%)
+    // Tier 4 Perk: +10%
     if (this.currentLayerIndex >= 4) {
       chance += 0.10;
     }
 
-    // Critical Annihilation mastery (+4% per rank)
-    const caRank = this.masteries['critical_annihilation'] || 0;
+    // Mastery perk: +4% per rank
+    const caRank = this.masteries['golden_leaf_crit'] || 0;
     chance += caRank * 0.04;
 
-    // Singularity Warp active skill: 100% crit
-    if (this.skills['singularity_warp'] && this.skills['singularity_warp'].active) {
+    // Skill 3: 100% crit
+    if (this.skills['tea_typhoon'] && this.skills['tea_typhoon'].active) {
       chance = 1.0;
     }
 
     return Math.min(1.0, chance);
   }
 
-  // Calculate Crit Multiplier
   calculateCritMultiplier() {
-    let mult = 3.2; // Base 3.2x
+    let mult = 3.2;
 
-    // Void Membrane layer perk: x3
+    // Tier 9 Perk: x3
     if (this.currentLayerIndex >= 9) {
       mult *= 3;
     }
 
     // Mastery perk: +50% per rank
-    const caRank = this.masteries['critical_annihilation'] || 0;
+    const caRank = this.masteries['golden_leaf_crit'] || 0;
     mult += caRank * 0.50;
 
-    // Singularity Warp skill
-    if (this.skills['singularity_warp'] && this.skills['singularity_warp'].active) {
+    // Skill 3
+    if (this.skills['tea_typhoon'] && this.skills['tea_typhoon'].active) {
       mult *= 2.5;
     }
 
     return mult;
   }
 
-  // Get Maximum Combo Multiplier
   getMaxComboMultiplier() {
-    let maxMulti = 5.0; // Base max 5x
+    let maxMulti = 5.0;
 
-    // Plasma Mantle layer perk
+    // Tier 3 Perk: 7.5x
     if (this.currentLayerIndex >= 3) {
       maxMulti = 7.5;
     }
 
     // Mastery: +1x per rank
-    const ceRank = this.masteries['combo_endurance'] || 0;
+    const ceRank = this.masteries['thermal_insulation'] || 0;
     maxMulti += ceRank * 1.0;
 
     return maxMulti;
   }
 
-  // Perform an Active Tap on the Core
+  // Active Click / Tap
   performTap(isTimingCrit = false) {
     this.totalClicks++;
 
-    // 1. Build Heat
+    // Heat gain (kettle boiling up)
     const heatGain = 9;
     this.heat = Math.min(this.maxHeat, this.heat + heatGain);
 
-    // 2. Compute Click Damage
     const basePower = this.calculateBaseClickPower();
     const comboMult = this.comboMultiplier;
 
-    // Check Critical
     const critChance = this.calculateCritChance();
     const isCrit = isTimingCrit || (Math.random() < critChance);
     const critMultiplier = isCrit ? this.calculateCritMultiplier() : 1;
 
     let finalDamage = basePower * comboMult * critMultiplier;
 
-    // Quantum Resonance skill: extra echo strikes
-    if (this.skills['quantum_resonance'] && this.skills['quantum_resonance'].active) {
+    // Tea_VPN Tunnel skill: 4 echo drops
+    if (this.skills['vpn_tunnel'] && this.skills['vpn_tunnel'].active) {
       finalDamage *= 3.5;
     }
 
@@ -544,7 +541,6 @@ export class GameState {
       this.totalCrits++;
     }
 
-    // Add Energy & progress current layer
     this.addEnergy(finalDamage);
 
     return {
@@ -559,8 +555,6 @@ export class GameState {
     this.energy += amount;
     this.totalEnergyEarned += amount;
     this.layerProgress += amount;
-
-    // Check Containment Layer Breach
     this.checkLayerBreach();
   }
 
@@ -569,7 +563,6 @@ export class GameState {
     if (!currentLayer) return false;
 
     if (this.layerProgress >= currentLayer.energyReq) {
-      // Breached!
       if (this.currentLayerIndex < CONTAINMENT_LAYERS.length - 1) {
         this.currentLayerIndex++;
         this.layerProgress = 0;
@@ -579,7 +572,6 @@ export class GameState {
     return false;
   }
 
-  // Activate an Overclock Skill
   activateSkill(skillId) {
     const skill = this.skills[skillId];
     const def = SKILL_DEFINITIONS.find(s => s.id === skillId);
@@ -591,7 +583,6 @@ export class GameState {
     skill.activeTimer = def.duration;
     skill.cooldownTimer = def.cooldown;
 
-    // Immediate action if Overdrive
     if (skillId === 'overdrive') {
       this.heat = this.maxHeat;
       this.comboMultiplier = this.getMaxComboMultiplier();
@@ -600,31 +591,37 @@ export class GameState {
     return true;
   }
 
-  // Update Game Loop (called every frame with dt in seconds)
+  // Activate Tea_VPN Ad Boost (from sponsor ad)
+  activateTeaVpnAdBoost() {
+    this.isVpnAdActive = true;
+    this.vpnAdTimer = 25; // 25 seconds of turbo boiling
+    this.heat = this.maxHeat;
+    const bonus = this.calculateBaseClickPower() * 30;
+    this.addEnergy(bonus);
+    return bonus;
+  }
+
   update(dt) {
-    // 1. Passive Energy Income (scaled by active play synergies)
+    // 1. Passive Tea Generation
     const passive = this.calculatePassivePerSec();
     if (passive > 0) {
       this.addEnergy(passive * dt);
     }
 
-    // 2. Heat Decay & Combo Multiplier
-    const isOverdrive = this.skills['overdrive'] && this.skills['overdrive'].active;
+    // 2. Heat / Temperature decay (tea cools down!)
+    const isOverdrive = (this.skills['overdrive'] && this.skills['overdrive'].active) || this.isVpnAdActive;
     if (!isOverdrive) {
-      // Decay rate: base 18 per sec
       let decayRate = 18;
-      // Chrono Dampener perk (-40%)
+      // Tier 6 perk: -40%
       if (this.currentLayerIndex >= 6) {
         decayRate *= 0.60;
       }
-      // Mastery perk
-      const ceRank = this.masteries['combo_endurance'] || 0;
+      const ceRank = this.masteries['thermal_insulation'] || 0;
       decayRate *= Math.max(0.2, 1 - ceRank * 0.15);
 
       this.heat = Math.max(0, this.heat - decayRate * dt);
     }
 
-    // Calculate Combo Multiplier based on heat
     const maxCombo = this.getMaxComboMultiplier();
     const heatRatio = this.heat / this.maxHeat;
     this.comboMultiplier = 1 + heatRatio * (maxCombo - 1);
@@ -634,20 +631,24 @@ export class GameState {
       const s = this.skills[id];
       if (s.active) {
         s.activeTimer -= dt;
-        if (s.activeTimer <= 0) {
-          s.active = false;
-        }
+        if (s.activeTimer <= 0) s.active = false;
       } else if (s.cooldownTimer > 0) {
         s.cooldownTimer = Math.max(0, s.cooldownTimer - dt);
       }
     });
+
+    // 4. Update Tea_VPN Ad Boost timer
+    if (this.isVpnAdActive) {
+      this.vpnAdTimer -= dt;
+      if (this.vpnAdTimer <= 0) {
+        this.isVpnAdActive = false;
+      }
+    }
   }
 
-  // Supernova Rebirth (Prestige)
   calculatePendingSDM() {
-    // Requires at least 500,000 total energy to rebirth
-    if (this.totalEnergyEarned < 500000) return 0;
-    const base = Math.floor(12 * Math.pow(this.totalEnergyEarned / 500000, 0.42));
+    if (this.totalEnergyEarned < 250000) return 0;
+    const base = Math.floor(10 * Math.pow(this.totalEnergyEarned / 250000, 0.44));
     return Math.max(1, base);
   }
 
@@ -663,17 +664,13 @@ export class GameState {
     this.totalSDMEarned += sdmGained;
     this.supernovaCount++;
 
-    // Reset run progress
     this.energy = 0;
     this.layerProgress = 0;
     this.currentLayerIndex = 0;
     this.heat = 0;
     this.comboMultiplier = 1;
 
-    // Reset upgrades
     UPGRADE_DEFINITIONS.forEach(u => this.upgrades[u.id] = 0);
-
-    // Reset skills
     SKILL_DEFINITIONS.forEach(s => {
       this.skills[s.id] = { active: false, activeTimer: 0, cooldownTimer: 0 };
     });
@@ -682,9 +679,8 @@ export class GameState {
     return sdmGained;
   }
 
-  // Hard Reset
   hardReset() {
-    localStorage.removeItem('core_ignition_save_v1');
+    localStorage.removeItem('itea_inc_save_v1');
     window.location.reload();
   }
 }

@@ -1,15 +1,22 @@
 {
-  "name": "core-ignition-clicker",
+  "name": "itea-inc-tea-tycoon",
   "version": "1.0.0",
-  "description": "Sci-Fi Vertical Mobile Clicker Game for Android - Genesis Core Ignition",
+  "description": "ITea.inc: Silicon Valley Tea Tycoon & Tea_VPN - Full Android Clicker App",
   "type": "module",
   "scripts": {
     "dev": "vite --host",
     "build": "vite build",
     "preview": "vite preview",
-    "test": "node test_game_logic.js"
+    "test": "node test_game_logic.js",
+    "android:sync": "vite build && cap sync android",
+    "android:open": "cap open android"
   },
   "devDependencies": {
     "vite": "^6.2.0"
+  },
+  "dependencies": {
+    "@capacitor/android": "^8.5.3",
+    "@capacitor/cli": "^8.5.3",
+    "@capacitor/core": "^8.5.3"
   }
 }

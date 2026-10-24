@@ -1,6 +1,6 @@
 /**
- * CORE IGNITION: Singularity Break
- * Main Game Controller, Loop, Events & UI Binder
+ * ITea.inc: Silicon Valley Tea Tycoon & Tea_VPN
+ * Main Controller, Game Loop, Tea_VPN Ads, Canvas & Audio Events
  */
 
 import { GameState, CONTAINMENT_LAYERS, UPGRADE_DEFINITIONS, SKILL_DEFINITIONS, MASTERY_TREE } from './gameState.js';
@@ -8,7 +8,7 @@ import { CoreVisualizer } from './particles.js';
 import { sounds } from './audio.js';
 import { haptics } from './haptics.js';
 
-// Number formatting utility (K, M, B, T, Qa, Qi, etc.)
+// Number formatting utility for tea volumes
 export function formatNumber(num) {
   if (num === null || num === undefined || isNaN(num)) return '0';
   if (num < 1000) {
@@ -24,7 +24,6 @@ export function formatNumber(num) {
   return `${formatted} ${suffixes[i]}`;
 }
 
-// App Controller
 class GameApp {
   constructor() {
     this.state = new GameState();
@@ -34,48 +33,40 @@ class GameApp {
     this.sparkElem = document.getElementById('spark-anomaly');
 
     this.sparkActive = false;
-    this.sparkTimer = 25; // seconds until first spark
+    this.sparkTimer = 25;
     this.lastFrameTime = performance.now();
 
     this.init();
   }
 
   init() {
-    // 1. Load state
     this.state.load();
 
-    // 2. Initialize visualizer
     if (this.canvas) {
       this.visualizer = new CoreVisualizer(this.canvas);
     }
 
-    // 3. Process offline earnings
+    // Check offline earnings
     const offlineReport = this.state.processOfflineEarnings();
     if (offlineReport && offlineReport.energyGained > 0) {
       this.showOfflineModal(offlineReport);
     }
 
-    // 4. Bind DOM events
     this.bindEvents();
-
-    // 5. Build Upgrades, Layers, and Mastery lists in DOM
     this.renderUpgradesList();
     this.renderLayersList();
     this.renderMasteryList();
 
-    // 6. Start Loop
     requestAnimationFrame(this.gameLoop.bind(this));
 
-    // 7. Auto-save every 5s & beforeunload
     setInterval(() => this.state.save(), 5000);
     window.addEventListener('beforeunload', () => this.state.save());
   }
 
   bindEvents() {
-    // Core Click / Multi-touch
+    // Smart Mug Tap
     const coreTarget = document.getElementById('core-touch-target');
     if (coreTarget) {
-      // Pointerdown handles both mouse & multi-touch taps cleanly
       coreTarget.addEventListener('pointerdown', (e) => {
         e.preventDefault();
         sounds.ensureContext();
@@ -83,12 +74,20 @@ class GameApp {
       });
     }
 
-    // Quantum Spark Anomaly Tap
+    // Golden Tea Bag Collect
     if (this.sparkElem) {
       this.sparkElem.addEventListener('pointerdown', (e) => {
         e.preventDefault();
         e.stopPropagation();
-        this.collectSpark();
+        this.collectGoldenBag();
+      });
+    }
+
+    // Tea_VPN Sponsor Ad Banner Click
+    const vpnBanner = document.getElementById('tea-vpn-banner');
+    if (vpnBanner) {
+      vpnBanner.addEventListener('click', () => {
+        this.openTeaVpnAdModal();
       });
     }
 
@@ -114,13 +113,17 @@ class GameApp {
       });
     });
 
-    // Skill Bar Buttons
+    // Skills Quick-Bar
     SKILL_DEFINITIONS.forEach(def => {
       const btn = document.getElementById(`skill-${def.id}`);
       if (btn) {
         btn.addEventListener('click', () => {
           if (this.state.activateSkill(def.id)) {
-            sounds.playSkill();
+            if (def.id === 'vpn_tunnel') {
+              sounds.playVpnConnect();
+            } else {
+              sounds.playClick(6);
+            }
             haptics.skill();
             if (this.visualizer) {
               this.visualizer.triggerBreachEffect();
@@ -130,7 +133,7 @@ class GameApp {
       }
     });
 
-    // Top Header Buttons
+    // Sound toggle
     const btnSound = document.getElementById('btn-sound');
     if (btnSound) {
       btnSound.addEventListener('click', () => {
@@ -139,6 +142,7 @@ class GameApp {
       });
     }
 
+    // Haptics toggle
     const btnHaptics = document.getElementById('btn-haptics');
     if (btnHaptics) {
       btnHaptics.addEventListener('click', () => {
@@ -148,6 +152,7 @@ class GameApp {
       });
     }
 
+    // Settings Modal
     const btnSettings = document.getElementById('btn-settings');
     const modalSettings = document.getElementById('modal-settings');
     const btnSettingsClose = document.getElementById('btn-settings-close');
@@ -162,17 +167,17 @@ class GameApp {
       btnSettingsClose.addEventListener('click', () => modalSettings.classList.remove('open'));
     }
 
-    // Hard reset button
+    // Hard reset
     const btnHardReset = document.getElementById('btn-hard-reset');
     if (btnHardReset) {
       btnHardReset.addEventListener('click', () => {
-        if (confirm('ВНИМАНИЕ: Сбросить весь прогресс игры, включая престиж и мастерство?')) {
+        if (confirm('ВНИМАНИЕ: Сбросить всю чайную империю ITea.inc, включая франшизы и акции?')) {
           this.state.hardReset();
         }
       });
     }
 
-    // Modal confirmations
+    // Modal close buttons
     const btnOfflineConfirm = document.getElementById('btn-offline-confirm');
     if (btnOfflineConfirm) {
       btnOfflineConfirm.addEventListener('click', () => {
@@ -187,15 +192,15 @@ class GameApp {
       });
     }
 
-    // Supernova Action Button
+    // Supernova / Franchise IPO Button
     const btnSupernova = document.getElementById('btn-supernova-action');
     if (btnSupernova) {
       btnSupernova.addEventListener('click', () => {
         if (this.state.canSupernova()) {
           const sdm = this.state.calculatePendingSDM();
-          if (confirm(`Запустить Сверхновую? Вы получите +${sdm} SDM, но текущая энергия и модули будут сброшены для нового ускоренного цикла!`)) {
+          if (confirm(`Выйти на IPO? Вы получите +${sdm} Золотых Листьев (GTL) для покупки акций в Совете Директоров, а объём заварки будет сброшен для новой супер-франшизы!`)) {
             this.state.performSupernova();
-            sounds.playSupernova();
+            sounds.playRebirth();
             haptics.supernova();
             if (this.visualizer) this.visualizer.triggerBreachEffect();
             this.renderUpgradesList();
@@ -207,14 +212,55 @@ class GameApp {
     }
   }
 
+  // Tea_VPN Ad commercial modal flow
+  openTeaVpnAdModal() {
+    const modal = document.getElementById('modal-vpn-ad');
+    const timerFill = document.getElementById('vpn-ad-timer-fill');
+    const statusText = document.getElementById('vpn-ad-status');
+    const claimBtn = document.getElementById('btn-vpn-ad-claim');
+
+    if (!modal) return;
+    modal.classList.add('open');
+
+    // Reset ad animation
+    timerFill.style.transition = 'none';
+    timerFill.style.width = '0%';
+    claimBtn.style.display = 'none';
+    statusText.textContent = 'Туннелирование чая через Tea_VPN... (3 сек)';
+
+    // Trigger timer fill
+    setTimeout(() => {
+      timerFill.style.transition = 'width 3s linear';
+      timerFill.style.width = '100%';
+    }, 50);
+
+    setTimeout(() => {
+      statusText.textContent = '✓ Соединение защищено! Пинг 2мс! Бонус готов!';
+      claimBtn.style.display = 'block';
+      sounds.playVpnConnect();
+      haptics.comboTier();
+    }, 3050);
+
+    claimBtn.onclick = () => {
+      const bonus = this.state.activateTeaVpnAdBoost();
+      modal.classList.remove('open');
+      sounds.playGoldenBag();
+      haptics.skill();
+      if (this.visualizer) this.visualizer.triggerBreachEffect();
+
+      const stage = document.getElementById('tab-reactor');
+      const cx = stage ? stage.clientWidth / 2 : 180;
+      const cy = stage ? stage.clientHeight / 2 : 250;
+      this.spawnFloatingNumber(cx, cy, bonus, true);
+    };
+  }
+
   handleCoreTap(clientX, clientY) {
     const tapResult = this.state.performTap(false);
 
-    // Audio & Haptics
     if (tapResult.isCrit) {
       sounds.playCrit();
       haptics.crit();
-      // Screen shake
       const app = document.getElementById('app-frame');
       app.classList.remove('screen-shake');
       void app.offsetWidth;
@@ -224,15 +270,11 @@ class GameApp {
       haptics.tap();
     }
 
-    // Particles
     if (this.visualizer) {
-      this.visualizer.emitSparks(clientX, clientY, tapResult.isCrit ? 16 : 8, tapResult.isCrit, tapResult.comboMultiplier);
+      this.visualizer.emitSparks(clientX, clientY, tapResult.isCrit ? 15 : 8, tapResult.isCrit, tapResult.comboMultiplier);
     }
 
-    // Floating damage number
     this.spawnFloatingNumber(clientX, clientY, tapResult.damage, tapResult.isCrit);
-
-    // Check if a layer was breached by this tap
     this.checkBreachAlert();
   }
 
@@ -240,7 +282,7 @@ class GameApp {
     if (!this.floatingLayer) return;
     const elem = document.createElement('div');
     elem.className = `floating-num ${isCrit ? 'crit' : ''}`;
-    elem.textContent = (isCrit ? '💥 +' : '+') + formatNumber(amount);
+    elem.textContent = (isCrit ? '🍃 +' : '+') + formatNumber(amount) + ' мл';
 
     const rect = this.floatingLayer.getBoundingClientRect();
     const spawnX = x ? (x - rect.left) : (rect.width / 2);
@@ -257,23 +299,20 @@ class GameApp {
     const modal = document.getElementById('modal-offline');
     if (!modal) return;
     document.getElementById('offline-time').textContent = `${report.elapsedMinutes} мин.`;
-    document.getElementById('offline-earned').textContent = `+${formatNumber(report.energyGained)}`;
+    document.getElementById('offline-earned').textContent = `+${formatNumber(report.energyGained)} мл`;
     modal.classList.add('open');
   }
 
   checkBreachAlert() {
-    // If current layer changed or completed
-    const currentLayer = CONTAINMENT_LAYERS[this.state.currentLayerIndex];
     if (this.lastRecordedLayer !== undefined && this.state.currentLayerIndex > this.lastRecordedLayer) {
-      // Trigger breach alert
-      sounds.playLayerBreach();
+      sounds.playTierUp();
       haptics.layerBreach();
       if (this.visualizer) this.visualizer.triggerBreachEffect();
 
       const breachedLayer = CONTAINMENT_LAYERS[this.lastRecordedLayer];
       const modal = document.getElementById('modal-breach');
       if (modal && breachedLayer) {
-        document.getElementById('breach-layer-title').textContent = `${breachedLayer.name} разрушен!`;
+        document.getElementById('breach-layer-title').textContent = `${breachedLayer.name} освоен!`;
         document.getElementById('breach-layer-desc').textContent = breachedLayer.desc;
         document.getElementById('breach-perk-text').textContent = breachedLayer.perk;
         modal.classList.add('open');
@@ -283,22 +322,21 @@ class GameApp {
     this.lastRecordedLayer = this.state.currentLayerIndex;
   }
 
-  collectSpark() {
+  collectGoldenBag() {
     if (!this.sparkActive) return;
     this.sparkActive = false;
     this.sparkElem.style.display = 'none';
 
-    sounds.playSparkCollect();
+    sounds.playGoldenBag();
     haptics.comboTier();
 
-    // Reward: massive instant energy burst based on 30x active tap + full heat!
     const baseClick = this.state.calculateBaseClickPower();
-    const sparkRank = this.state.masteries['spark_flux'] || 0;
+    const sparkRank = this.state.masteries['tea_bag_flux'] || 0;
     const sparkMultiplier = 1 + sparkRank * 0.5;
 
     const reward = baseClick * 35 * this.state.getMaxComboMultiplier() * sparkMultiplier;
     this.state.addEnergy(reward);
-    this.state.heat = this.state.maxHeat; // Full overclock!
+    this.state.heat = this.state.maxHeat; // Full boil!
 
     if (this.visualizer) {
       this.visualizer.triggerBreachEffect();
@@ -307,7 +345,6 @@ class GameApp {
     const rect = this.sparkElem.getBoundingClientRect();
     this.spawnFloatingNumber(rect.left + 24, rect.top + 24, reward, true);
 
-    // Reset spark cooldown: 35-50s
     this.sparkTimer = 35 + Math.random() * 15;
   }
 
@@ -316,7 +353,6 @@ class GameApp {
 
     this.sparkTimer -= dt;
     if (this.sparkTimer <= 0) {
-      // Spawn Spark Anomaly
       this.sparkActive = true;
       if (this.sparkElem) {
         const stage = document.getElementById('tab-reactor');
@@ -330,7 +366,6 @@ class GameApp {
         this.sparkElem.style.top = `${startY}px`;
         this.sparkElem.style.display = 'flex';
 
-        // Auto-despawn after 8 seconds if not clicked
         setTimeout(() => {
           if (this.sparkActive) {
             this.sparkActive = false;
@@ -366,7 +401,7 @@ class GameApp {
         </div>
         <button id="buy-btn-${def.id}" class="buy-btn" ${isAffordable ? '' : 'disabled'}>
           <span style="font-size: 0.65rem; opacity: 0.8;">КУПИТЬ</span>
-          <span>${formatNumber(cost)}</span>
+          <span>${formatNumber(cost)} мл</span>
         </button>
       `;
 
@@ -402,7 +437,7 @@ class GameApp {
       buyBtn.disabled = !isAffordable;
       buyBtn.innerHTML = `
         <span style="font-size: 0.65rem; opacity: 0.8;">КУПИТЬ</span>
-        <span>${formatNumber(cost)}</span>
+        <span>${formatNumber(cost)} мл</span>
       `;
     }
   }
@@ -420,18 +455,18 @@ class GameApp {
       card.className = `layer-card ${isBreached ? 'breached' : ''} ${isCurrent ? 'current' : ''}`;
       card.innerHTML = `
         <div class="layer-card-title">
-          <span>Слой ${layer.id}: ${layer.name}</span>
-          <span style="font-size: 0.75rem; color: ${isBreached ? 'var(--green-pass)' : (isCurrent ? 'var(--cyan-primary)' : 'var(--text-muted)')}; font-weight: 800;">
-            ${isBreached ? '✓ ПРОБИТ' : (isCurrent ? '⚡ ТЕКУЩИЙ' : '🔒 ЗАБЛОКИРОВАН')}
+          <span>Грейд ${layer.id}: ${layer.name}</span>
+          <span style="font-size: 0.75rem; color: ${isBreached ? 'var(--tea-green)' : (isCurrent ? 'var(--tea-amber)' : 'var(--text-muted)')}; font-weight: 800;">
+            ${isBreached ? '✓ ОСВОЕН' : (isCurrent ? '🍵 ТЕКУЩИЙ' : '🔒 ЗАБЛОКИРОВАН')}
           </span>
         </div>
         <div style="font-size: 0.72rem; color: var(--text-dim);">${layer.desc}</div>
         <div class="layer-perk-badge">
-          <span>💎 Эффект:</span>
+          <span>🍃 Эффект:</span>
           <span>${layer.perk}</span>
         </div>
         <div style="font-size: 0.7rem; font-family: 'JetBrains Mono', monospace; color: var(--text-muted); margin-top: 2px;">
-          Требуемая энергия: ${formatNumber(layer.energyReq)}
+          Требуемый объём: ${formatNumber(layer.energyReq)} мл
         </div>
       `;
       container.appendChild(card);
@@ -461,16 +496,16 @@ class GameApp {
           </div>
           <span class="upgrade-desc">${def.desc}</span>
         </div>
-        <button id="buy-mastery-${def.id}" class="buy-btn" style="border-color: var(--magenta-crit); background: rgba(255, 0, 122, 0.2);" ${isAffordable ? '' : 'disabled'}>
+        <button id="buy-mastery-${def.id}" class="buy-btn" style="border-color: var(--crit-gold); background: rgba(255, 209, 102, 0.2);" ${isAffordable ? '' : 'disabled'}>
           <span style="font-size: 0.65rem; opacity: 0.8;">${isMax ? 'МАКС' : 'КУПИТЬ'}</span>
-          <span>${isMax ? '—' : `${cost} SDM`}</span>
+          <span>${isMax ? '—' : `${cost} GTL`}</span>
         </button>
       `;
 
       const buyBtn = card.querySelector(`#buy-mastery-${def.id}`);
       buyBtn.addEventListener('click', () => {
         if (this.state.buyMastery(def.id)) {
-          sounds.playSkill();
+          sounds.playVpnConnect();
           haptics.comboTier();
           this.renderMasteryList();
           this.updateUI();
@@ -506,32 +541,32 @@ class GameApp {
   }
 
   updateUI() {
-    // 1. Energy Displays
+    // 1. Total Tea Volume
     const energyElem = document.getElementById('energy-val');
     if (energyElem) energyElem.textContent = formatNumber(this.state.energy);
 
-    // 2. Active click & Passive displays
+    // 2. Click & Passive displays
     const clickElem = document.getElementById('click-power-val');
     if (clickElem) {
       const totalClick = this.state.calculateBaseClickPower() * this.state.comboMultiplier;
-      clickElem.textContent = formatNumber(totalClick);
+      clickElem.textContent = `${formatNumber(totalClick)} мл`;
     }
 
     const passiveElem = document.getElementById('passive-val');
     if (passiveElem) {
-      passiveElem.textContent = `${formatNumber(this.state.calculatePassivePerSec())} /с`;
+      passiveElem.textContent = `${formatNumber(this.state.calculatePassivePerSec())} мл/с`;
     }
 
     const sdmElem = document.getElementById('sdm-val');
     if (sdmElem) {
-      sdmElem.textContent = `${formatNumber(this.state.stellarDarkMatter)} SDM`;
+      sdmElem.textContent = `${formatNumber(this.state.stellarDarkMatter)} GTL`;
     }
 
-    // 3. Containment Layer Progress
+    // 3. Current Ceremonial Tier
     const currentLayer = CONTAINMENT_LAYERS[this.state.currentLayerIndex];
     if (currentLayer) {
       const layerBadge = document.getElementById('layer-badge');
-      if (layerBadge) layerBadge.textContent = `СЛОЙ ${currentLayer.id}`;
+      if (layerBadge) layerBadge.textContent = `ГРЕЙД ${currentLayer.id}`;
 
       const layerName = document.getElementById('layer-name');
       if (layerName) layerName.textContent = currentLayer.name;
@@ -544,10 +579,13 @@ class GameApp {
       if (layerFill) layerFill.style.width = `${pct}%`;
     }
 
-    // 4. Combo Heat
+    // 4. Boil Temperature
     const comboVal = document.getElementById('combo-multiplier-val');
     if (comboVal) {
-      comboVal.textContent = `x${this.state.comboMultiplier.toFixed(2)}`;
+      const heatRatio = this.state.heat / this.state.maxHeat;
+      const tempC = Math.round(60 + heatRatio * 40);
+      const statusLabel = tempC >= 98 ? '🔥 КИПЕНИЕ!' : (tempC >= 80 ? 'Горячий' : 'Тёплый');
+      comboVal.textContent = `x${this.state.comboMultiplier.toFixed(2)} (${tempC}°C ${statusLabel})`;
     }
     const comboFill = document.getElementById('combo-bar-fill');
     if (comboFill) {
@@ -555,7 +593,7 @@ class GameApp {
       comboFill.style.width = `${heatPct}%`;
     }
 
-    // 5. Supernova Pending SDM
+    // 5. Franchise IPO Pending GTL
     const pendingSDM = this.state.calculatePendingSDM();
     const pendingSDMElem = document.getElementById('pending-sdm-val');
     if (pendingSDMElem) pendingSDMElem.textContent = formatNumber(pendingSDM);
@@ -565,7 +603,7 @@ class GameApp {
       btnSupernova.disabled = pendingSDM <= 0;
     }
 
-    // 6. Update Upgrade Buttons Affordable States
+    // 6. Upgrades affordability
     UPGRADE_DEFINITIONS.forEach(def => {
       const card = document.getElementById(`upgrade-card-${def.id}`);
       if (card) {
@@ -577,7 +615,6 @@ class GameApp {
       }
     });
 
-    // 7. Update Skills
     this.updateSkillsUI();
   }
 
@@ -585,25 +622,18 @@ class GameApp {
     const dt = Math.min(0.1, (timestamp - this.lastFrameTime) / 1000);
     this.lastFrameTime = timestamp;
 
-    // Update state math
     this.state.update(dt);
-
-    // Update Quantum Spark timer
     this.updateSpark(dt);
 
-    // Render Canvas Visualizer
     if (this.visualizer) {
       this.visualizer.render(this.state, dt);
     }
 
-    // Update UI elements
     this.updateUI();
-
     requestAnimationFrame(this.gameLoop.bind(this));
   }
 }
 
-// Start application when DOM is ready
 window.addEventListener('DOMContentLoaded', () => {
   window.app = new GameApp();
 });

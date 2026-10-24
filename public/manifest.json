@@ -1,12 +1,12 @@
 {
-  "name": "Core Ignition: Singularity Break",
-  "short_name": "CoreIgnition",
+  "name": "ITea.inc: Tea Tycoon & Tea_VPN",
+  "short_name": "ITea.inc",
   "start_url": "/",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#070a12",
-  "theme_color": "#00f0ff",
-  "description": "Sci-Fi Vertical Mobile Clicker - Genesis Core Ignition",
+  "background_color": "#071109",
+  "theme_color": "#70e000",
+  "description": "ITea.inc - Заваривай чай гигабайтами и туннелируй через Tea_VPN!",
   "icons": [
     {
       "src": "/icon.svg",

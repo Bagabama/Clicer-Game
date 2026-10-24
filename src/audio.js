@@ -1,13 +1,13 @@
 /**
- * Web Audio Procedural Synthesizer for Core Ignition
- * Generates rich sci-fi sound effects without external audio files.
+ * ITea.inc Procedural Web Audio Engine
+ * Generates tea splashes, boiling kettle bubbles, Tea_VPN cyber chimes and zen bells.
  */
 
 class SoundSystem {
   constructor() {
     this.ctx = null;
     this.enabled = true;
-    this.volume = 0.6;
+    this.volume = 0.65;
     this.initialized = false;
   }
 
@@ -29,16 +29,12 @@ class SoundSystem {
     }
   }
 
-  setVolume(vol) {
-    this.volume = Math.max(0, Math.min(1, vol));
-  }
-
   toggleSound() {
     this.enabled = !this.enabled;
     return this.enabled;
   }
 
-  // Active Click: crisp high-energy laser pulse, pitch modulates with combo heat
+  // Active Click: Water drop / bubble pop, pitch rises with kettle temperature
   playClick(comboMultiplier = 1) {
     if (!this.enabled) return;
     this.ensureContext();
@@ -48,23 +44,23 @@ class SoundSystem {
     const osc = this.ctx.createOscillator();
     const gain = this.ctx.createGain();
 
-    // Base pitch scales dynamically with combo
-    const baseFreq = 380 + Math.min(comboMultiplier, 10) * 45;
-    osc.type = 'triangle';
+    // Pitch rises dynamically with kettle boil temperature
+    const baseFreq = 420 + Math.min(comboMultiplier, 10) * 55;
+    osc.type = 'sine';
     osc.frequency.setValueAtTime(baseFreq, t);
-    osc.frequency.exponentialRampToValueAtTime(120, t + 0.08);
+    osc.frequency.exponentialRampToValueAtTime(baseFreq * 1.6, t + 0.05);
 
-    gain.gain.setValueAtTime(0.3 * this.volume, t);
-    gain.gain.exponentialRampToValueAtTime(0.001, t + 0.08);
+    gain.gain.setValueAtTime(0.4 * this.volume, t);
+    gain.gain.exponentialRampToValueAtTime(0.001, t + 0.06);
 
     osc.connect(gain);
     gain.connect(this.ctx.destination);
 
     osc.start(t);
-    osc.stop(t + 0.08);
+    osc.stop(t + 0.06);
   }
 
-  // Critical Hit: powerful metallic crunch + laser chime
+  // Critical Hit: "Идеальная Заварка" - Golden splash + glass chime
   playCrit() {
     if (!this.enabled) return;
     this.ensureContext();
@@ -72,69 +68,62 @@ class SoundSystem {
 
     const t = this.ctx.currentTime;
 
-    // Laser sweep
+    // High sparkling chime
     const osc1 = this.ctx.createOscillator();
     const gain1 = this.ctx.createGain();
-    osc1.type = 'sawtooth';
-    osc1.frequency.setValueAtTime(1100, t);
-    osc1.frequency.exponentialRampToValueAtTime(320, t + 0.18);
+    osc1.type = 'triangle';
+    osc1.frequency.setValueAtTime(1320, t);
+    osc1.frequency.exponentialRampToValueAtTime(1760, t + 0.15);
 
-    gain1.gain.setValueAtTime(0.5 * this.volume, t);
+    gain1.gain.setValueAtTime(0.45 * this.volume, t);
     gain1.gain.exponentialRampToValueAtTime(0.001, t + 0.18);
 
     osc1.connect(gain1);
     gain1.connect(this.ctx.destination);
-
     osc1.start(t);
     osc1.stop(t + 0.18);
 
-    // Sub-bass thud
+    // Deep water splash tone
     const osc2 = this.ctx.createOscillator();
     const gain2 = this.ctx.createGain();
     osc2.type = 'sine';
-    osc2.frequency.setValueAtTime(180, t);
-    osc2.frequency.exponentialRampToValueAtTime(40, t + 0.22);
+    osc2.frequency.setValueAtTime(260, t);
+    osc2.frequency.exponentialRampToValueAtTime(80, t + 0.2);
 
-    gain2.gain.setValueAtTime(0.7 * this.volume, t);
-    gain2.gain.exponentialRampToValueAtTime(0.001, t + 0.22);
+    gain2.gain.setValueAtTime(0.6 * this.volume, t);
+    gain2.gain.exponentialRampToValueAtTime(0.001, t + 0.2);
 
     osc2.connect(gain2);
     gain2.connect(this.ctx.destination);
-
     osc2.start(t);
-    osc2.stop(t + 0.22);
+    osc2.stop(t + 0.2);
   }
 
-  // Combo Tier reached (e.g. 3x, 5x, 10x Overdrive)
-  playComboUp(tier = 1) {
+  // Tea_VPN Connected sound: Cybernetic futuristic handshake
+  playVpnConnect() {
     if (!this.enabled) return;
     this.ensureContext();
     if (!this.ctx) return;
 
-    const freqs = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6
     const t = this.ctx.currentTime;
-
-    freqs.slice(0, Math.min(tier + 1, 4)).forEach((freq, idx) => {
+    [440, 554.37, 659.25, 880, 1108.7].forEach((freq, idx) => {
       const osc = this.ctx.createOscillator();
       const gain = this.ctx.createGain();
-
-      osc.type = 'sine';
+      osc.type = 'sawtooth';
       osc.frequency.setValueAtTime(freq, t + idx * 0.05);
 
-      gain.gain.setValueAtTime(0, t + idx * 0.05);
-      gain.gain.linearRampToValueAtTime(0.3 * this.volume, t + idx * 0.05 + 0.02);
-      gain.gain.exponentialRampToValueAtTime(0.001, t + idx * 0.05 + 0.25);
+      gain.gain.setValueAtTime(0.3 * this.volume, t + idx * 0.05);
+      gain.gain.exponentialRampToValueAtTime(0.001, t + idx * 0.05 + 0.15);
 
       osc.connect(gain);
       gain.connect(this.ctx.destination);
-
       osc.start(t + idx * 0.05);
-      osc.stop(t + idx * 0.05 + 0.26);
+      osc.stop(t + idx * 0.05 + 0.16);
     });
   }
 
-  // Skill Activated
-  playSkill() {
+  // Tea Ceremony Upgrade / Tier Up: Zen Tibetan bowl / gong
+  playTierUp() {
     if (!this.enabled) return;
     this.ensureContext();
     if (!this.ctx) return;
@@ -143,88 +132,45 @@ class SoundSystem {
     const osc = this.ctx.createOscillator();
     const gain = this.ctx.createGain();
 
-    osc.type = 'sawtooth';
-    osc.frequency.setValueAtTime(220, t);
-    osc.frequency.exponentialRampToValueAtTime(880, t + 0.3);
-
-    gain.gain.setValueAtTime(0.4 * this.volume, t);
-    gain.gain.exponentialRampToValueAtTime(0.001, t + 0.35);
-
-    osc.connect(gain);
-    gain.connect(this.ctx.destination);
-
-    osc.start(t);
-    osc.stop(t + 0.35);
-  }
-
-  // Layer Breach: dramatic bass explosion + ascending triumph chime
-  playLayerBreach() {
-    if (!this.enabled) return;
-    this.ensureContext();
-    if (!this.ctx) return;
-
-    const t = this.ctx.currentTime;
-
-    // Sub rumble
-    const osc = this.ctx.createOscillator();
-    const gain = this.ctx.createGain();
     osc.type = 'sine';
-    osc.frequency.setValueAtTime(150, t);
-    osc.frequency.exponentialRampToValueAtTime(30, t + 0.8);
+    osc.frequency.setValueAtTime(528, t); // 528Hz Solfeggio Love/Zen frequency
+    osc.frequency.linearRampToValueAtTime(520, t + 0.9);
 
     gain.gain.setValueAtTime(0.8 * this.volume, t);
-    gain.gain.exponentialRampToValueAtTime(0.001, t + 0.8);
+    gain.gain.exponentialRampToValueAtTime(0.001, t + 1.2);
 
     osc.connect(gain);
     gain.connect(this.ctx.destination);
+
     osc.start(t);
-    osc.stop(t + 0.8);
-
-    // Chime chords
-    [440, 554.37, 659.25, 880, 1108.7].forEach((f, i) => {
-      const o = this.ctx.createOscillator();
-      const g = this.ctx.createGain();
-      o.type = 'triangle';
-      o.frequency.setValueAtTime(f, t + 0.15 + i * 0.07);
-
-      g.gain.setValueAtTime(0, t + 0.15 + i * 0.07);
-      g.gain.linearRampToValueAtTime(0.35 * this.volume, t + 0.17 + i * 0.07);
-      g.gain.exponentialRampToValueAtTime(0.001, t + 0.7 + i * 0.07);
-
-      o.connect(g);
-      g.connect(this.ctx.destination);
-
-      o.start(t + 0.15 + i * 0.07);
-      o.stop(t + 0.75 + i * 0.07);
-    });
+    osc.stop(t + 1.2);
   }
 
-  // Quantum Spark Anomaly Collected
-  playSparkCollect() {
+  // Golden Tea Bag collected
+  playGoldenBag() {
     if (!this.enabled) return;
     this.ensureContext();
     if (!this.ctx) return;
 
     const t = this.ctx.currentTime;
-    [659.25, 880, 1318.5].forEach((freq, idx) => {
+    [587.33, 739.99, 880, 1174.66].forEach((f, i) => {
       const osc = this.ctx.createOscillator();
       const gain = this.ctx.createGain();
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(freq, t + idx * 0.06);
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(f, t + i * 0.07);
 
-      gain.gain.setValueAtTime(0.35 * this.volume, t + idx * 0.06);
-      gain.gain.exponentialRampToValueAtTime(0.001, t + idx * 0.06 + 0.2);
+      gain.gain.setValueAtTime(0.4 * this.volume, t + i * 0.07);
+      gain.gain.exponentialRampToValueAtTime(0.001, t + i * 0.07 + 0.25);
 
       osc.connect(gain);
       gain.connect(this.ctx.destination);
-
-      osc.start(t + idx * 0.06);
-      osc.stop(t + idx * 0.06 + 0.2);
+      osc.start(t + i * 0.07);
+      osc.stop(t + i * 0.07 + 0.26);
     });
   }
 
-  // Supernova Rebirth: deep cosmic boom
-  playSupernova() {
+  // Rebirth / Franchise IPO: Big ceremonial gong
+  playRebirth() {
     if (!this.enabled) return;
     this.ensureContext();
     if (!this.ctx) return;
@@ -232,17 +178,18 @@ class SoundSystem {
     const t = this.ctx.currentTime;
     const osc = this.ctx.createOscillator();
     const gain = this.ctx.createGain();
-    osc.type = 'sawtooth';
-    osc.frequency.setValueAtTime(100, t);
-    osc.frequency.exponentialRampToValueAtTime(20, t + 1.6);
+
+    osc.type = 'triangle';
+    osc.frequency.setValueAtTime(196, t); // G3 Gong
+    osc.frequency.exponentialRampToValueAtTime(65, t + 1.8);
 
     gain.gain.setValueAtTime(0.9 * this.volume, t);
-    gain.gain.exponentialRampToValueAtTime(0.001, t + 1.6);
+    gain.gain.exponentialRampToValueAtTime(0.001, t + 2.0);
 
     osc.connect(gain);
     gain.connect(this.ctx.destination);
     osc.start(t);
-    osc.stop(t + 1.6);
+    osc.stop(t + 2.0);
   }
 }
 
