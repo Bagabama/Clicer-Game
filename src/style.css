@@ -1,0 +1,873 @@
+/* ==========================================================================
+   CORE IGNITION: SINGULARITY BREAK - DESIGN SYSTEM & MOBILE VERTICAL STYLING
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;800&family=Outfit:wght@400;500;600;700;800;900&display=swap');
+
+:root {
+  --bg-deep: #060911;
+  --bg-surface: rgba(13, 19, 36, 0.75);
+  --bg-card: rgba(19, 28, 54, 0.65);
+  --bg-card-hover: rgba(29, 42, 79, 0.8);
+  
+  --cyan-primary: #00f0ff;
+  --cyan-glow: rgba(0, 240, 255, 0.4);
+  --magenta-crit: #ff007a;
+  --magenta-glow: rgba(255, 0, 122, 0.4);
+  --amber-heat: #ffaa00;
+  --amber-glow: rgba(255, 170, 0, 0.45);
+  --purple-dark: #9d4edd;
+  --green-pass: #00ff88;
+  
+  --text-main: #f0f4ff;
+  --text-dim: #7f8ea3;
+  --text-muted: #4e5b72;
+  
+  --border-glass: rgba(0, 240, 255, 0.16);
+  --border-active: rgba(0, 240, 255, 0.6);
+  --shadow-neon: 0 0 20px rgba(0, 240, 255, 0.25);
+  
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+
+body {
+  background-color: #020408;
+  background-image: 
+    radial-gradient(circle at 50% 15%, rgba(0, 240, 255, 0.08) 0%, transparent 60%),
+    radial-gradient(circle at 50% 85%, rgba(157, 78, 221, 0.08) 0%, transparent 60%);
+  color: var(--text-main);
+  font-family: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+  height: 100vh;
+  height: 100dvh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+/* ==========================================================================
+   APP CONTAINER (Vertical Mobile Frame on Desktop, Fullscreen on Android)
+   ========================================================================== */
+#app-frame {
+  width: 100%;
+  max-width: 440px;
+  height: 100vh;
+  height: 100dvh;
+  background-color: var(--bg-deep);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 0 50px rgba(0, 0, 0, 0.9), 0 0 30px rgba(0, 240, 255, 0.1);
+}
+
+@media (min-width: 500px) {
+  #app-frame {
+    height: 94vh;
+    max-height: 900px;
+    border-radius: 36px;
+    border: 1px solid rgba(0, 240, 255, 0.25);
+  }
+}
+
+/* TOP STATUS BAR */
+.header-bar {
+  padding: calc(12px + var(--safe-top)) 16px 10px;
+  background: var(--bg-surface);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border-glass);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 10;
+}
+
+.brand-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.brand-icon {
+  width: 26px;
+  height: 26px;
+  filter: drop-shadow(0 0 6px var(--cyan-primary));
+}
+
+.brand-title {
+  font-size: 0.95rem;
+  font-weight: 800;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  background: linear-gradient(90deg, #ffffff, var(--cyan-primary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.icon-btn {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--border-glass);
+  color: var(--text-main);
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.9rem;
+}
+
+.icon-btn:active {
+  transform: scale(0.92);
+  background: rgba(0, 240, 255, 0.2);
+}
+
+/* ==========================================================================
+   ENERGY & RESOURCE DASHBOARD
+   ========================================================================== */
+.resource-dashboard {
+  padding: 12px 16px 8px;
+  background: linear-gradient(180deg, rgba(13, 19, 36, 0.9) 0%, rgba(6, 9, 17, 0.4) 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 5;
+}
+
+.energy-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: var(--cyan-primary);
+  text-transform: uppercase;
+  margin-bottom: 2px;
+  opacity: 0.9;
+}
+
+.energy-display {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+.energy-value {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: #ffffff;
+  text-shadow: 0 0 20px var(--cyan-glow);
+  line-height: 1.1;
+}
+
+.energy-unit {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--cyan-primary);
+}
+
+/* ACTIVE VS PASSIVE STATS BAR */
+.stats-strip {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin-top: 8px;
+  padding: 6px 12px;
+  background: rgba(19, 28, 54, 0.4);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.stat-title {
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.stat-val {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.stat-val.active-highlight {
+  color: var(--cyan-primary);
+}
+
+.stat-val.passive-subtle {
+  color: var(--green-pass);
+  opacity: 0.85;
+}
+
+.stat-val.sdm-badge {
+  color: var(--magenta-crit);
+}
+
+/* ==========================================================================
+   CONTAINMENT LAYER PROGRESS
+   ========================================================================== */
+.layer-banner {
+  margin: 6px 16px 2px;
+  padding: 8px 12px;
+  background: var(--bg-card);
+  backdrop-filter: blur(10px);
+  border-radius: 14px;
+  border: 1px solid var(--border-glass);
+}
+
+.layer-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.layer-name-tag {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.layer-badge {
+  font-size: 0.65rem;
+  padding: 2px 6px;
+  border-radius: 6px;
+  background: rgba(0, 240, 255, 0.15);
+  color: var(--cyan-primary);
+  font-weight: 800;
+  border: 1px solid rgba(0, 240, 255, 0.3);
+}
+
+.layer-pct {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--cyan-primary);
+}
+
+.layer-bar-bg {
+  width: 100%;
+  height: 7px;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 6px;
+  overflow: hidden;
+  position: relative;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.layer-bar-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #00f0ff, #9d4edd);
+  border-radius: 6px;
+  box-shadow: 0 0 10px var(--cyan-primary);
+  transition: width 0.15s ease-out;
+}
+
+/* ==========================================================================
+   COMBO HEAT GAUGE (Overclock Multiplier)
+   ========================================================================== */
+.combo-gauge-wrapper {
+  margin: 6px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.combo-gauge-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.combo-label {
+  color: var(--text-dim);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.combo-multiplier-tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: var(--amber-heat);
+  text-shadow: 0 0 10px var(--amber-glow);
+}
+
+.combo-bar-track {
+  width: 100%;
+  height: 9px;
+  background: rgba(0, 0, 0, 0.6);
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 170, 0, 0.25);
+  position: relative;
+}
+
+.combo-bar-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #00f0ff 0%, #ffaa00 65%, #ff007a 100%);
+  border-radius: 10px;
+  box-shadow: 0 0 12px var(--amber-glow);
+  transition: width 0.08s ease-out;
+}
+
+/* ==========================================================================
+   REACTOR STAGE (CANVAS CORE & ACTIVE CLICK AREA)
+   ========================================================================== */
+.stage-container {
+  flex: 1;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  touch-action: manipulation;
+}
+
+#core-canvas {
+  width: 100%;
+  height: 100%;
+  max-width: 380px;
+  max-height: 380px;
+  display: block;
+}
+
+.core-touch-target {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 15;
+  outline: none;
+}
+
+.core-touch-target:active {
+  transform: translate(-50%, -50%) scale(0.96);
+}
+
+/* Floating damage numbers */
+.floating-numbers-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 25;
+}
+
+.floating-num {
+  position: absolute;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 800;
+  font-size: 1.15rem;
+  color: #ffffff;
+  text-shadow: 0 0 8px var(--cyan-primary);
+  animation: floatUp 0.85s cubic-bezier(0.18, 0.89, 0.32, 1.28) forwards;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+}
+
+.floating-num.crit {
+  font-size: 1.6rem;
+  color: #ff007a;
+  text-shadow: 0 0 14px var(--magenta-crit), 0 0 4px #ffffff;
+  animation: floatUpCrit 1s cubic-bezier(0.18, 0.89, 0.32, 1.28) forwards;
+}
+
+@keyframes floatUp {
+  0% {
+    opacity: 1;
+    transform: translate(-50%, 0) scale(0.85);
+  }
+  30% {
+    transform: translate(-50%, -30px) scale(1.1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -75px) scale(0.9);
+  }
+}
+
+@keyframes floatUpCrit {
+  0% {
+    opacity: 1;
+    transform: translate(-50%, 0) scale(1.1);
+  }
+  25% {
+    transform: translate(-50%, -45px) scale(1.35) rotate(-5deg);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -100px) scale(0.95);
+  }
+}
+
+/* Screen shake effect */
+.screen-shake {
+  animation: shake 0.25s cubic-bezier(.36,.07,.19,.97) both;
+}
+
+@keyframes shake {
+  10%, 90% { transform: translate3d(-2px, 0, 0); }
+  20%, 80% { transform: translate3d(3px, -2px, 0); }
+  30%, 50%, 70% { transform: translate3d(-3px, 2px, 0); }
+  40%, 60% { transform: translate3d(3px, 0, 0); }
+}
+
+/* ==========================================================================
+   QUANTUM SPARK ANOMALY (Random active tap target)
+   ========================================================================== */
+.spark-anomaly {
+  position: absolute;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #ffffff 10%, #ffaa00 50%, rgba(255, 0, 122, 0) 75%);
+  box-shadow: 0 0 25px #ffaa00, 0 0 40px #ff007a;
+  cursor: pointer;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  animation: pulseSpark 1.2s infinite alternate ease-in-out;
+  touch-action: manipulation;
+}
+
+@keyframes pulseSpark {
+  0% { transform: scale(0.85); filter: brightness(1); }
+  100% { transform: scale(1.2); filter: brightness(1.6); }
+}
+
+/* ==========================================================================
+   ACTIVE SKILL QUICK-BAR
+   ========================================================================== */
+.skill-bar {
+  display: flex;
+  gap: 8px;
+  padding: 6px 16px;
+  width: 100%;
+  justify-content: center;
+  z-index: 10;
+}
+
+.skill-btn {
+  flex: 1;
+  max-width: 110px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-glass);
+  border-radius: 12px;
+  padding: 8px 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.2s ease;
+}
+
+.skill-btn:active {
+  transform: scale(0.95);
+}
+
+.skill-btn.active-skill {
+  border-color: var(--magenta-crit);
+  box-shadow: 0 0 15px var(--magenta-glow);
+  background: rgba(255, 0, 122, 0.15);
+}
+
+.skill-btn.locked {
+  opacity: 0.45;
+  filter: grayscale(1);
+  cursor: not-allowed;
+}
+
+.skill-btn-icon {
+  font-size: 1.15rem;
+}
+
+.skill-btn-name {
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: var(--text-main);
+  text-align: center;
+  white-space: nowrap;
+}
+
+.skill-cooldown-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(6, 9, 17, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: var(--cyan-primary);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.skill-cooldown-overlay.show {
+  opacity: 1;
+}
+
+/* ==========================================================================
+   TAB PANELS & CONTENT (Modules, Containment, Supernova)
+   ========================================================================== */
+.tab-content-area {
+  display: none;
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px 16px 8px;
+  z-index: 10;
+}
+
+.tab-content-area.active {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Custom scrollbars */
+.tab-content-area::-webkit-scrollbar {
+  width: 4px;
+}
+.tab-content-area::-webkit-scrollbar-thumb {
+  background: rgba(0, 240, 255, 0.25);
+  border-radius: 4px;
+}
+
+/* UPGRADE ITEM CARDS */
+.upgrade-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-glass);
+  border-radius: 14px;
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  transition: all 0.2s ease;
+}
+
+.upgrade-card:hover {
+  background: var(--bg-card-hover);
+  border-color: rgba(0, 240, 255, 0.4);
+}
+
+.upgrade-card.cannot-afford {
+  opacity: 0.6;
+}
+
+.upgrade-info {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  flex: 1;
+}
+
+.upgrade-title-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.upgrade-name {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.upgrade-rank-tag {
+  font-size: 0.7rem;
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--cyan-primary);
+  background: rgba(0, 240, 255, 0.12);
+  padding: 1px 6px;
+  border-radius: 4px;
+}
+
+.upgrade-desc {
+  font-size: 0.72rem;
+  color: var(--text-dim);
+  line-height: 1.25;
+}
+
+.buy-btn {
+  background: linear-gradient(135deg, rgba(0, 240, 255, 0.2), rgba(157, 78, 221, 0.3));
+  border: 1px solid var(--border-active);
+  color: #ffffff;
+  padding: 8px 14px;
+  border-radius: 10px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8rem;
+  font-weight: 700;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  min-width: 80px;
+}
+
+.buy-btn:active {
+  transform: scale(0.92);
+  background: var(--cyan-primary);
+  color: #000;
+}
+
+.buy-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  border-color: var(--border-glass);
+}
+
+/* ==========================================================================
+   CONTAINMENT LAYERS ROADMAP LIST
+   ========================================================================== */
+.layer-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-glass);
+  border-radius: 14px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  position: relative;
+}
+
+.layer-card.breached {
+  border-color: rgba(0, 255, 136, 0.4);
+  background: rgba(0, 255, 136, 0.05);
+}
+
+.layer-card.current {
+  border-color: var(--cyan-primary);
+  box-shadow: 0 0 15px rgba(0, 240, 255, 0.2);
+}
+
+.layer-card-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.85rem;
+  font-weight: 800;
+}
+
+.layer-perk-badge {
+  font-size: 0.72rem;
+  color: var(--cyan-primary);
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* ==========================================================================
+   SUPERNOVA REBIRTH & PRESTIGE PANEL
+   ========================================================================== */
+.supernova-hero {
+  background: linear-gradient(135deg, rgba(255, 0, 122, 0.15), rgba(157, 78, 221, 0.2));
+  border: 1px solid rgba(255, 0, 122, 0.4);
+  border-radius: 16px;
+  padding: 16px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.supernova-hero-title {
+  font-size: 1.1rem;
+  font-weight: 900;
+  color: #ffffff;
+  letter-spacing: 1px;
+}
+
+.rebirth-action-btn {
+  background: linear-gradient(90deg, #ff007a, #9d4edd);
+  color: #ffffff;
+  border: none;
+  border-radius: 12px;
+  padding: 12px 24px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 800;
+  letter-spacing: 1px;
+  cursor: pointer;
+  box-shadow: 0 0 20px rgba(255, 0, 122, 0.4);
+  transition: all 0.2s ease;
+  margin-top: 4px;
+}
+
+.rebirth-action-btn:active {
+  transform: scale(0.95);
+}
+
+.rebirth-action-btn:disabled {
+  opacity: 0.4;
+  filter: grayscale(1);
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+/* ==========================================================================
+   BOTTOM NAVIGATION BAR
+   ========================================================================== */
+.nav-bar {
+  padding: 8px 12px calc(8px + var(--safe-bottom));
+  background: var(--bg-surface);
+  backdrop-filter: blur(16px);
+  border-top: 1px solid var(--border-glass);
+  display: flex;
+  justify-content: space-around;
+  z-index: 20;
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  cursor: pointer;
+  padding: 6px 12px;
+  border-radius: 12px;
+  transition: all 0.2s ease;
+}
+
+.nav-item:active {
+  transform: scale(0.9);
+}
+
+.nav-item.active {
+  color: var(--cyan-primary);
+  background: rgba(0, 240, 255, 0.1);
+}
+
+.nav-icon {
+  font-size: 1.25rem;
+}
+
+.nav-label {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+/* ==========================================================================
+   MODAL WINDOWS (Offline Report, Breach Fanfare, Settings)
+   ========================================================================== */
+.modal-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(2, 4, 8, 0.88);
+  backdrop-filter: blur(10px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  z-index: 50;
+  animation: fadeIn 0.2s ease;
+}
+
+.modal-overlay.open {
+  display: flex;
+}
+
+.modal-card {
+  background: var(--bg-deep);
+  border: 1px solid var(--border-active);
+  border-radius: 20px;
+  padding: 22px;
+  max-width: 360px;
+  width: 100%;
+  box-shadow: 0 0 35px rgba(0, 240, 255, 0.2);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.modal-title {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.modal-body {
+  font-size: 0.82rem;
+  color: var(--text-dim);
+  line-height: 1.45;
+}
+
+.modal-btn {
+  background: var(--cyan-primary);
+  color: #070a12;
+  border: none;
+  border-radius: 12px;
+  padding: 10px;
+  font-weight: 800;
+  font-size: 0.85rem;
+  cursor: pointer;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  transition: all 0.2s ease;
+}
+
+.modal-btn:active {
+  transform: scale(0.95);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
