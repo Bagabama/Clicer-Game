@@ -1,6 +1,6 @@
 /**
- * ITea.inc - Deep Economy, Milestone Multipliers, Super-Exponential Inflation,
- * True Multiplicative Prestige & Lore Dialogue Engine
+ * ITea.inc - Bright Cozy Edition
+ * True Milestone Global Multipliers, Story NPC Dialogues, Rebalanced Economy & Prestige
  */
 
 export const MILESTONES = [10, 25, 50, 100, 175, 275, 400, 550, 750, 1000];
@@ -33,8 +33,8 @@ export const CONTAINMENT_LAYERS = [
     name: 'Пакетик «Майский Жмых»',
     energyReq: 1000,
     perk: '+25% к базовой силе ручной заварки',
-    desc: 'Пластиковый стаканчик и безымянный пакетик из кладовки стартапа. Начало пути ITea.inc!',
-    lore: 'Заваркин: «С этого пакетика начинались Яндекс и Гугл. Жми на кружку!»'
+    desc: 'Пластиковый стаканчик и пакетик из кладовки. Первые шаги чайного стартапа!',
+    color: '#52b788'
   },
   {
     id: 2,
@@ -42,15 +42,15 @@ export const CONTAINMENT_LAYERS = [
     energyReq: 8000,
     perk: 'Разблокировка навыка «Оверклок Чайника»',
     desc: 'Классический чай программистов под дедлайн. Вода еле теплая, но кофеин бодрит.',
-    lore: 'Заваркин: «Вода из кулера пахнет пластиком, но код сам себя не закоммитит!»'
+    color: '#f59e0b'
   },
   {
     id: 3,
     name: 'Зеленый Сенча с дедлайном',
     energyReq: 65000,
     perk: 'Максимальная температура заварки поднята до 7.5x',
-    desc: 'Настоящие японские листья, заряженные на исправление критических багов в проде.',
-    lore: 'Заваркин: «Сенча успокаивает нервы перед созвоном с заказчиком. Держи темп!»'
+    desc: 'Настоящие японские листья, заряженные на исправление багов в проде.',
+    color: '#2d6a4f'
   },
   {
     id: 4,
@@ -58,7 +58,7 @@ export const CONTAINMENT_LAYERS = [
     energyReq: 450000,
     perk: '+10% к шансу Идеальной Заварки (крита)',
     desc: 'Чай с гамма-аминомасляной кислотой для Senior Architect. Полная концентрация мысли.',
-    lore: 'Заваркин: «Габа разогнала нейроны. Теперь криты будут сыпаться как пулл-реквесты!»'
+    color: '#10b981'
   },
   {
     id: 5,
@@ -66,7 +66,7 @@ export const CONTAINMENT_LAYERS = [
     energyReq: 3500000,
     perk: 'Разблокировка навыка «Tea_VPN Hyper-Tunnel»',
     desc: 'Утёсный чай с горы Уи. Туннелирует заварку прямо в мозг разработчика.',
-    lore: 'Заваркин: «Туннелируем поставки чая в обход DPI и блокировок чайников!»'
+    color: '#d97706'
   },
   {
     id: 6,
@@ -74,7 +74,7 @@ export const CONTAINMENT_LAYERS = [
     energyReq: 28000000,
     perk: 'Чай в кружке остывает на 45% медленнее',
     desc: 'Взбитая пудра маття на кокосовом молоке. Модно, стильно, долго держит тепло.',
-    lore: 'Заваркин: «Хипстеры в коворкинге оценили. Тепло держится вдвое дольше!»'
+    color: '#40916c'
   },
   {
     id: 7,
@@ -82,7 +82,7 @@ export const CONTAINMENT_LAYERS = [
     energyReq: 220000000,
     perk: 'Золотые чайные пакетики появляются в 2.5 раза чаще',
     desc: 'Выдержанный блин шу-пуэра, хранившийся рядом с видеокартами во время майнинг-бума.',
-    lore: 'Заваркин: «Этот пуэр выдержан на теплом воздухе ферм биткоина. Чистый тонизирующий хешрейт!»'
+    color: '#92400e'
   },
   {
     id: 8,
@@ -90,7 +90,7 @@ export const CONTAINMENT_LAYERS = [
     energyReq: 1800000000,
     perk: 'Разблокировка навыка «Тайфун Заварки»',
     desc: 'Квантовый напиток, полученный после ночного деплоя в пятницу вечером.',
-    lore: 'Заваркин: «Горький вкус пятничного падения базы данных. Зато 100% криты!»'
+    color: '#06b6d4'
   },
   {
     id: 9,
@@ -98,7 +98,7 @@ export const CONTAINMENT_LAYERS = [
     energyReq: 15000000000,
     perk: 'Идеальные заварки дают утроенный объём (x3)',
     desc: 'Эксклюзивный сорт для совета директоров Кремниевой Долины. Вкус венчурных инвестиций.',
-    lore: 'Заваркин: «Сам Илон Маск заказывает у нас этот сорт для полётов на Марс!»'
+    color: '#b45309'
   },
   {
     id: 10,
@@ -106,7 +106,7 @@ export const CONTAINMENT_LAYERS = [
     energyReq: 120000000000,
     perk: '100% Заварка Достигнута! Время выходить на IPO и строить глобальную франшизу!',
     desc: 'Абсолютная гармония кода и чайного листа. Все чайники подключены к Tea_VPN.',
-    lore: 'Заваркин: «Мы победили вселенную! Выходи на IPO и забирай акции!»'
+    color: '#059669'
   }
 ];
 
@@ -114,6 +114,7 @@ export const UPGRADE_DEFINITIONS = [
   {
     id: 'kinetic_spoon',
     name: 'Кинетическая Ложечка',
+    icon: '🥄',
     category: 'active',
     baseCost: 20,
     costMult: 1.18,
@@ -123,7 +124,8 @@ export const UPGRADE_DEFINITIONS = [
   },
   {
     id: 'smart_mug_heater',
-    name: 'Кружка с USB-подогревом',
+    name: 'USB-Подогрев Кружки',
+    icon: '☕',
     category: 'active',
     baseCost: 110,
     costMult: 1.20,
@@ -134,6 +136,7 @@ export const UPGRADE_DEFINITIONS = [
   {
     id: 'intern_with_kettle',
     name: 'Стажер с электрочайником',
+    icon: '🧑‍💻',
     category: 'passive',
     baseCost: 350,
     costMult: 1.22,
@@ -143,7 +146,8 @@ export const UPGRADE_DEFINITIONS = [
   },
   {
     id: 'pressure_infuser',
-    name: 'Чайный Пресс-Инжектор',
+    name: 'Пресс-Инжектор Танина',
+    icon: '🫖',
     category: 'active',
     baseCost: 1600,
     costMult: 1.25,
@@ -154,6 +158,7 @@ export const UPGRADE_DEFINITIONS = [
   {
     id: 'wifi_tea_strainer',
     name: 'Умное Ситечко с Wi-Fi',
+    icon: '📡',
     category: 'active',
     baseCost: 7500,
     costMult: 1.27,
@@ -164,6 +169,7 @@ export const UPGRADE_DEFINITIONS = [
   {
     id: 'office_tea_cooler',
     name: 'Кулер с протоколом ITea',
+    icon: '🚰',
     category: 'passive',
     baseCost: 36000,
     costMult: 1.29,
@@ -174,6 +180,7 @@ export const UPGRADE_DEFINITIONS = [
   {
     id: 'tea_vpn_node',
     name: 'Серверная Нода Tea_VPN',
+    icon: '🛡️',
     category: 'active',
     baseCost: 180000,
     costMult: 1.32,
@@ -184,6 +191,7 @@ export const UPGRADE_DEFINITIONS = [
   {
     id: 'auto_brewing_rack',
     name: 'Чайный Серверный Стеллаж',
+    icon: '🗄️',
     category: 'passive',
     baseCost: 950000,
     costMult: 1.34,
@@ -194,6 +202,7 @@ export const UPGRADE_DEFINITIONS = [
   {
     id: 'tannin_accelerator',
     name: 'Гипер-Ускоритель Танина',
+    icon: '⚡',
     category: 'active',
     baseCost: 5500000,
     costMult: 1.37,
@@ -204,6 +213,7 @@ export const UPGRADE_DEFINITIONS = [
   {
     id: 'quantum_tea_rig',
     name: 'Квантовая Чайная Станция',
+    icon: '🌌',
     category: 'active',
     baseCost: 35000000,
     costMult: 1.40,
@@ -217,6 +227,7 @@ export const SKILL_DEFINITIONS = [
   {
     id: 'overdrive',
     name: 'Оверклок Чайника',
+    icon: '🔥',
     duration: 15,
     cooldown: 45,
     desc: 'Мгновенно доводит чайник до 100°C и блокирует остывание на максимальном множителе (x7.5) на 15 сек.',
@@ -225,6 +236,7 @@ export const SKILL_DEFINITIONS = [
   {
     id: 'vpn_tunnel',
     name: 'Tea_VPN Hyper-Tunnel',
+    icon: '🛡️',
     duration: 12,
     cooldown: 60,
     desc: 'Туннелирует чай через Tea_VPN: учетверяет урон активного клика (x4) на 12 секунд.',
@@ -233,6 +245,7 @@ export const SKILL_DEFINITIONS = [
   {
     id: 'tea_typhoon',
     name: 'Тайфун Заварки',
+    icon: '🌪️',
     duration: 15,
     cooldown: 90,
     desc: 'Каждый клик становится Идеальной Заваркой (100% крит) с дополнительным множителем x2.5 на 15 сек.',
@@ -283,59 +296,128 @@ export const MASTERY_TREE = [
   }
 ];
 
+// Mascot Cat «Заваркин» Lore Quotes
 export const MASCOT_LORE = [
-  'Мяу! Добро пожаловать в ITea.inc! Я Заваркин, твой чайный архитектор. Кликай кружку!',
-  'Чайник остывает без тапов! В холодном чае плавают только баги и сорванные дедлайны!',
-  'Каждые 10, 25, 50 уровней навыка дают огромный множитель x2, x3, x4! Качай уровни!',
-  'Цены растут быстрее дохода? Это инфляция Кремниевой Долины! Пора открывать Франшизу!',
-  'Престиж (IPO) умножает доход в разы навсегда! Чем больше сбросов, тем быстрее прогресс.',
-  'Tea_VPN шифрует наш чай по протоколу ChaCha20-Tea. Пинг до Цейлона минимальный!',
-  'Смотри рекламу спонсора Tea_VPN — получишь мгновенный турбо-буст и кипяток 100°C!',
-  'В пятницу вечером чай особенно крепок. Деплоим без страха!',
-  'Золотой пакетик на экране! Лови его, пока стажеры не утащили на кухню!'
+  'Заваркин: «Мяу! Без чая в IT-индустрии даже "Hello World" не скомпилируется!»',
+  'Заваркин: «Слышал, на бэкенде баг? Залей кружкой крепкого пуэра — сразу отпустит!»',
+  'Заваркин: «На 25-м уровне модулей прибыль взлетает в 3 раза! Жми сильнее!»',
+  'Заваркин: «Подливай кипяток! Остывший чай приносит лишь 5% дохода!»',
+  'Заваркин: «Tea_VPN шифрует наш чай от проливов на клавиатуру макбука!»',
+  'Заваркин: «Лови золотые пакетики! Они дают турбо-разогрев чайника!»',
+  'Заваркин: «После 10-го грейда выходим на IPO на чайной бирже!»'
+];
+
+// Interactive Story Characters / Visitors with auto-dialogues
+export const STORY_EVENTS = [
+  {
+    id: 'story_start',
+    trigger: (state) => state.totalEnergyEarned >= 50,
+    author: 'Стажер Максим',
+    badge: 'Junior Dev',
+    avatar: '🧑‍💻',
+    title: 'Первый гость чайной!',
+    text: 'Здравствуйте! Я стажер на испытательном сроке. Сказали, без кружки чая пулл-реквест не примут... Можно мне пакетик «Майского»? Держите первые чаевые!',
+    reward: 150
+  },
+  {
+    id: 'story_lvl10',
+    trigger: (state) => Object.values(state.upgrades).some(r => r >= 10),
+    author: 'Аня (Frontend)',
+    badge: 'UI/UX Ninja',
+    avatar: '👩‍🎨',
+    title: 'Ускорение на 10 уровне!',
+    text: 'Ого, ложечка крутится со скоростью 60 FPS! У меня верстка поехала от такого ускорения заварки! Доход клика только что удвоился (x2)!',
+    reward: 800
+  },
+  {
+    id: 'story_lvl25',
+    trigger: (state) => Object.values(state.upgrades).some(r => r >= 25),
+    author: 'Денис (Senior Backend)',
+    badge: 'Архитектор',
+    avatar: '🧙‍♂️',
+    title: 'Прорыв 25-го уровня: УТРОЕНИЕ ДОХОДА!',
+    text: 'Невероятно! 25-й уровень заварки утроил (x3) весь наш чайный поток! Пропускная способность бэкенда взлетела до небес. Держи бонус от компании!',
+    reward: 5000
+  },
+  {
+    id: 'story_tier2',
+    trigger: (state) => state.currentLayerIndex >= 1,
+    author: 'Сисадмин Петрович',
+    badge: 'DevOps & Кулеры',
+    avatar: '🔧',
+    title: 'Кулер подключен к сети!',
+    text: 'Я накатил патч безопасности на офисный чайник. Теперь у нас есть «Оверклок Чайника» — жми на бустер внизу экрана, чтобы врубить кипяток на 100°C!',
+    reward: 12000
+  },
+  {
+    id: 'story_lvl50',
+    trigger: (state) => Object.values(state.upgrades).some(r => r >= 50),
+    author: 'Тимлид Артем',
+    badge: 'Руководитель',
+    avatar: '👔',
+    title: 'Майлстоун x4: Спринт закрыт досрочно!',
+    text: 'Мы закрыли спринт на два дня раньше дедлайна благодаря вашей чайной станции! Менеджмент в полном восторге, доход за клик умножен в 4 раза!',
+    reward: 60000
+  },
+  {
+    id: 'story_tier5',
+    trigger: (state) => state.currentLayerIndex >= 4,
+    author: 'Безопасник Игорь',
+    badge: 'CyberSec',
+    avatar: '🕶️',
+    title: 'Tea_VPN официально одобрен!',
+    text: 'Мы зафиксировали подозрительно чистый трафик. Оказывается, вы используете Tea_VPN! Никаких блокировок, чай льется напрямую через туннель!',
+    reward: 500000
+  },
+  {
+    id: 'story_first_ipo',
+    trigger: (state) => state.supernovaCount >= 1,
+    author: 'Венчурный Инвестор Марк',
+    badge: 'Sequoia Capital',
+    avatar: '💼',
+    title: 'ITea.inc на бирже!',
+    text: 'Поздравляю с успешным IPO! Ваши акции теперь торгуются на бирже, а каждый следующий клик навсегда умножен на огромный франшизный мультипликатор!',
+    reward: 2000000
+  }
 ];
 
 export class GameState {
   constructor() {
-    this.energy = 0; // Current tea ml
-    this.currentRunTeaEarned = 0; // Reset upon prestige!
-    this.totalEnergyEarned = 0; // Lifetime stat
+    this.energy = 0;
+    this.currentRunTeaEarned = 0;
+    this.totalEnergyEarned = 0;
     this.totalClicks = 0;
     this.totalCrits = 0;
-    this.stellarDarkMatter = 0; // Golden Tea Leaves (GTL)
+    this.stellarDarkMatter = 0;
     this.totalSDMEarned = 0;
-    this.supernovaCount = 0; // Franchises launched
+    this.supernovaCount = 0;
 
-    // Ceremonial Tier tracking
     this.currentLayerIndex = 0;
     this.layerProgress = 0;
 
-    // Upgrades: map of upgradeId -> rank
     this.upgrades = {};
     UPGRADE_DEFINITIONS.forEach(u => this.upgrades[u.id] = 0);
 
-    // Mastery ranks: map of masteryId -> rank
     this.masteries = {};
     MASTERY_TREE.forEach(m => this.masteries[m.id] = 0);
 
-    // Boil temperature / Combo heat
+    // Story events completed
+    this.completedStoryEvents = {};
+
     this.heat = 0;
     this.maxHeat = 100;
     this.comboMultiplier = 1;
 
-    // Tea_VPN Ad Boost status
     this.isVpnAdActive = false;
     this.vpnAdTimer = 0;
 
-    // Skills
     this.skills = {};
     SKILL_DEFINITIONS.forEach(s => {
       this.skills[s.id] = { active: false, activeTimer: 0, cooldownTimer: 0 };
     });
 
-    // Mascot Dialogue
-    this.currentLore = MASCOT_LORE[0];
-    this.loreTimer = 0;
+    this.baristaSpeech = 'Завариваю свежий чай! 🍵';
+    this.baristaSpeechTimer = 0;
 
     this.lastTimestamp = Date.now();
     this.lastSaved = Date.now();
@@ -343,7 +425,7 @@ export class GameState {
 
   load() {
     try {
-      const data = localStorage.getItem('itea_inc_save_v2');
+      const data = localStorage.getItem('itea_inc_save_v3');
       if (data) {
         const parsed = JSON.parse(data);
         this.energy = Number(parsed.energy) || 0;
@@ -366,6 +448,9 @@ export class GameState {
           Object.keys(parsed.masteries).forEach(id => {
             if (this.masteries[id] !== undefined) this.masteries[id] = Number(parsed.masteries[id]) || 0;
           });
+        }
+        if (parsed.completedStoryEvents) {
+          this.completedStoryEvents = parsed.completedStoryEvents;
         }
         this.lastSaved = Number(parsed.lastSaved) || Date.now();
         return true;
@@ -391,9 +476,10 @@ export class GameState {
         layerProgress: this.layerProgress,
         upgrades: this.upgrades,
         masteries: this.masteries,
+        completedStoryEvents: this.completedStoryEvents,
         lastSaved: Date.now()
       };
-      localStorage.setItem('itea_inc_save_v2', JSON.stringify(data));
+      localStorage.setItem('itea_inc_save_v3', JSON.stringify(data));
       this.lastSaved = Date.now();
     } catch (e) {
       console.error('Error saving game:', e);
@@ -407,7 +493,7 @@ export class GameState {
     if (elapsedSeconds > 15) {
       const MAX_OFFLINE_SECONDS = 1800; // 30 minutes
       const cappedSeconds = Math.min(elapsedSeconds, MAX_OFFLINE_SECONDS);
-      const OFFLINE_PENALTY_EFFICIENCY = 0.05; // 5% cold tea throttle
+      const OFFLINE_PENALTY_EFFICIENCY = 0.05;
 
       const passivePerSec = this.calculatePassivePerSec();
       const offlineGained = passivePerSec * cappedSeconds * OFFLINE_PENALTY_EFFICIENCY;
@@ -426,7 +512,7 @@ export class GameState {
     return null;
   }
 
-  // Super-exponential cost scaling after level 15 so costs outpace raw clicks
+  // Cost inflation formula
   getUpgradeCost(upgradeDef) {
     const rank = this.upgrades[upgradeDef.id] || 0;
     const baseInflation = Math.pow(upgradeDef.costMult, rank);
@@ -440,14 +526,15 @@ export class GameState {
     const cost = this.getUpgradeCost(def);
     if (this.energy >= cost) {
       this.energy -= cost;
-      const newRank = (this.upgrades[def.id] || 0) + 1;
+      const prevRank = this.upgrades[def.id] || 0;
+      const newRank = prevRank + 1;
       this.upgrades[def.id] = newRank;
 
-      // Check if milestone was reached
-      const prevMult = getUpgradeMilestoneMultiplier(newRank - 1);
+      const prevMult = getUpgradeMilestoneMultiplier(prevRank);
       const curMult = getUpgradeMilestoneMultiplier(newRank);
       if (curMult > prevMult) {
-        this.setLore(`Заваркин: «Уровень ${newRank} у ${def.name}! Доход умножен в x${curMult / prevMult}! Вот это буст!»`);
+        const factor = curMult / prevMult;
+        this.setBaristaSpeech(`Уровень ${newRank}! Доход утроен (x${factor})! ✨`);
       }
 
       return true;
@@ -469,7 +556,7 @@ export class GameState {
     if (this.stellarDarkMatter >= cost) {
       this.stellarDarkMatter -= cost;
       this.masteries[def.id] = rank + 1;
-      this.setLore(`Заваркин: «Куплены акции ${def.name}! Вся сеть ITea теперь работает эффективнее!»`);
+      this.setBaristaSpeech(`Акции ${def.name} куплены! Доход вырос! 📈`);
       return true;
     }
     return false;
@@ -477,23 +564,27 @@ export class GameState {
 
   // True Multiplicative Prestige Multiplier!
   calculatePrestigeMultiplier() {
-    // Each prestige gives +150% multiplicative base
     const franchiseFactor = 1 + this.supernovaCount * 1.5;
-    // Each golden tea leaf gives +20% multiplicative base
     const leafFactor = 1 + this.stellarDarkMatter * 0.20;
     return franchiseFactor * leafFactor;
   }
 
+  // Calculate Global Milestone Multiplier:
+  // When an upgrade hits a milestone (10, 25, 50, 100), its multiplier (x2, x3, x4, x5)
+  // directly multiplies the overall click power, guaranteeing an immediate ~3x jump on lvl 25!
   calculateBaseClickPower() {
-    let power = 1;
+    let baseClickSum = 0;
+    let globalMilestoneMult = 1;
 
     UPGRADE_DEFINITIONS.forEach(u => {
       const rank = this.upgrades[u.id] || 0;
       if (rank > 0) {
-        const milestoneMult = getUpgradeMilestoneMultiplier(rank);
-        power += rank * u.clickBonus * milestoneMult;
+        baseClickSum += rank * u.clickBonus;
+        globalMilestoneMult *= getUpgradeMilestoneMultiplier(rank);
       }
     });
+
+    let power = (1 + baseClickSum) * globalMilestoneMult;
 
     // Tier 1 Perk: +25%
     if (this.currentLayerIndex >= 1) {
@@ -520,66 +611,50 @@ export class GameState {
   }
 
   calculatePassivePerSec() {
-    let passive = 0;
+    let basePassive = 0;
+    let globalMilestoneMult = 1;
+
     UPGRADE_DEFINITIONS.forEach(u => {
       const rank = this.upgrades[u.id] || 0;
-      if (rank > 0) {
-        const milestoneMult = getUpgradeMilestoneMultiplier(rank);
-        passive += rank * u.passiveBonus * milestoneMult;
+      if (rank > 0 && u.passiveBonus > 0) {
+        basePassive += rank * u.passiveBonus;
+        globalMilestoneMult *= getUpgradeMilestoneMultiplier(rank);
       }
     });
 
-    // Multiply passive by prestige too
-    passive *= this.calculatePrestigeMultiplier();
+    if (basePassive <= 0) return 0;
 
+    let passive = basePassive * globalMilestoneMult * this.calculatePrestigeMultiplier();
     return passive;
   }
 
   calculateCritChance() {
     let chance = 0.08;
-
-    if (this.currentLayerIndex >= 4) {
-      chance += 0.10;
-    }
-
+    if (this.currentLayerIndex >= 4) chance += 0.10;
     const caRank = this.masteries['golden_leaf_crit'] || 0;
     chance += caRank * 0.05;
-
-    // Skill 3: 100% crit
     if (this.skills['tea_typhoon'] && this.skills['tea_typhoon'].active) {
       chance = 1.0;
     }
-
     return Math.min(1.0, chance);
   }
 
   calculateCritMultiplier() {
     let mult = 3.2;
-
-    if (this.currentLayerIndex >= 9) {
-      mult *= 3;
-    }
-
+    if (this.currentLayerIndex >= 9) mult *= 3;
     const caRank = this.masteries['golden_leaf_crit'] || 0;
     mult += caRank * 0.75;
-
     if (this.skills['tea_typhoon'] && this.skills['tea_typhoon'].active) {
       mult *= 2.5;
     }
-
     return mult;
   }
 
   getMaxComboMultiplier() {
     let maxMulti = 5.0;
-
-    if (this.currentLayerIndex >= 3) {
-      maxMulti = 7.5;
-    }
-
+    if (this.currentLayerIndex >= 3) maxMulti = 7.5;
     const ceRank = this.masteries['thermal_insulation'] || 0;
     maxMulti += ceRank * 1.0;
-
     return maxMulti;
   }
 
@@ -598,16 +673,17 @@ export class GameState {
 
     let finalDamage = basePower * comboMult * critMultiplier;
 
-    // Tea_VPN Tunnel skill: x4 echo strikes
     if (this.skills['vpn_tunnel'] && this.skills['vpn_tunnel'].active) {
       finalDamage *= 4.0;
     }
 
     if (isCrit) {
       this.totalCrits++;
-      if (Math.random() < 0.15) {
-        this.setLore('Заваркин: «Вот это крит! Золотой лист прямо в кружку!»');
-      }
+      const critPhrases = ['Идеальная заварка! 🌟', 'Золотой лист в чашке! 🍃', 'Крит! Какой аромат! ✨'];
+      this.setBaristaSpeech(critPhrases[Math.floor(Math.random() * critPhrases.length)]);
+    } else if (Math.random() < 0.08) {
+      const phrases = ['Завариваю с любовью! 💚', 'Свежий улун готов! 🍵', 'Пей пока горячо! ☕', 'Вкусный чай — чистый код! 💻'];
+      this.setBaristaSpeech(phrases[Math.floor(Math.random() * phrases.length)]);
     }
 
     this.addEnergy(finalDamage);
@@ -636,11 +712,31 @@ export class GameState {
       if (this.currentLayerIndex < CONTAINMENT_LAYERS.length - 1) {
         this.currentLayerIndex++;
         this.layerProgress = 0;
-        this.setLore(currentLayer.lore || `Заваркин: «Ура! Открыт ${CONTAINMENT_LAYERS[this.currentLayerIndex].name}!»`);
         return true;
       }
     }
     return false;
+  }
+
+  // Check if any story event should trigger
+  checkPendingStoryEvent() {
+    for (const ev of STORY_EVENTS) {
+      if (!this.completedStoryEvents[ev.id] && ev.trigger(this)) {
+        return ev;
+      }
+    }
+    return null;
+  }
+
+  completeStoryEvent(eventId) {
+    const ev = STORY_EVENTS.find(e => e.id === eventId);
+    if (!ev) return 0;
+    this.completedStoryEvents[eventId] = true;
+    if (ev.reward) {
+      this.addEnergy(ev.reward);
+    }
+    this.save();
+    return ev.reward || 0;
   }
 
   activateSkill(skillId) {
@@ -657,11 +753,11 @@ export class GameState {
     if (skillId === 'overdrive') {
       this.heat = this.maxHeat;
       this.comboMultiplier = this.getMaxComboMultiplier();
-      this.setLore('Заваркин: «Оверклок на 100°C активирован! Чайник ревёт!»');
+      this.setBaristaSpeech('Оверклок на 100°C! Вода бурлит! 🔥');
     } else if (skillId === 'vpn_tunnel') {
-      this.setLore('Заваркин: «Tea_VPN туннель включен! Учетверенный урон за клик!»');
+      this.setBaristaSpeech('Tea_VPN Hyper-Tunnel: клик учетверен! 🛡️');
     } else if (skillId === 'tea_typhoon') {
-      this.setLore('Заваркин: «Тайфун Заварки! Все клики критические!»');
+      this.setBaristaSpeech('Тайфун Заварки: 100% крит! 🌪️');
     }
 
     return true;
@@ -669,21 +765,18 @@ export class GameState {
 
   activateTeaVpnAdBoost() {
     this.isVpnAdActive = true;
-    this.vpnAdTimer = 30; // 30 seconds
+    this.vpnAdTimer = 30;
     this.heat = this.maxHeat;
     const bonus = this.calculateBaseClickPower() * 40;
     this.addEnergy(bonus);
-    this.setLore('Заваркин: «Спасибо спонсору Tea_VPN! Пинг 2мс, +50% к заварке активировано!»');
+    this.setBaristaSpeech('Спонсор Tea_VPN активировал +50% Турбо-Кипение! ⚡');
     return bonus;
   }
 
-  // Next Prestige Requirement: scales up dynamically per prestige reset!
   getPrestigeRequirement() {
-    // 1st: 500,000; 2nd: 1,100,000; 3rd: 2,420,000; 4th: 5,324,000...
     return Math.floor(500000 * Math.pow(2.2, this.supernovaCount));
   }
 
-  // Calculate pending Golden Tea Leaves based on THIS run's earned tea!
   calculatePendingSDM() {
     const req = this.getPrestigeRequirement();
     if (this.currentRunTeaEarned < req) return 0;
@@ -703,9 +796,8 @@ export class GameState {
     this.totalSDMEarned += sdmGained;
     this.supernovaCount++;
 
-    // RESET THIS RUN FROM ZERO!
     this.energy = 0;
-    this.currentRunTeaEarned = 0; // Starts from 0 for the new franchise!
+    this.currentRunTeaEarned = 0;
     this.layerProgress = 0;
     this.currentLayerIndex = 0;
     this.heat = 0;
@@ -716,24 +808,22 @@ export class GameState {
       this.skills[s.id] = { active: false, activeTimer: 0, cooldownTimer: 0 };
     });
 
-    this.setLore(`Заваркин: «Ура! Франшиза #${this.supernovaCount} запущена! Базовый клик теперь умножен на x${this.calculatePrestigeMultiplier().toFixed(1)}!»`);
+    this.setBaristaSpeech(`Франшиза #${this.supernovaCount} открыта! Доход умножен на x${this.calculatePrestigeMultiplier().toFixed(1)}! 🎉`);
     this.save();
     return sdmGained;
   }
 
-  setLore(text) {
-    this.currentLore = text;
-    this.loreTimer = 7; // Show for 7 seconds before cycling
+  setBaristaSpeech(text) {
+    this.baristaSpeech = text;
+    this.baristaSpeechTimer = 4.0;
   }
 
   update(dt) {
-    // 1. Passive Tea Generation
     const passive = this.calculatePassivePerSec();
     if (passive > 0) {
       this.addEnergy(passive * dt);
     }
 
-    // 2. Heat / Temperature decay
     const isOverdrive = (this.skills['overdrive'] && this.skills['overdrive'].active) || this.isVpnAdActive;
     if (!isOverdrive) {
       let decayRate = 18;
@@ -750,7 +840,6 @@ export class GameState {
     const heatRatio = this.heat / this.maxHeat;
     this.comboMultiplier = 1 + heatRatio * (maxCombo - 1);
 
-    // 3. Update Skills
     Object.keys(this.skills).forEach(id => {
       const s = this.skills[id];
       if (s.active) {
@@ -761,7 +850,6 @@ export class GameState {
       }
     });
 
-    // 4. Update Tea_VPN Ad Boost timer
     if (this.isVpnAdActive) {
       this.vpnAdTimer -= dt;
       if (this.vpnAdTimer <= 0) {
@@ -769,17 +857,16 @@ export class GameState {
       }
     }
 
-    // 5. Mascot Lore cycle
-    this.loreTimer -= dt;
-    if (this.loreTimer <= 0) {
-      const randomIdx = Math.floor(Math.random() * MASCOT_LORE.length);
-      this.currentLore = MASCOT_LORE[randomIdx];
-      this.loreTimer = 12; // Cycle every 12 seconds
+    if (this.baristaSpeechTimer > 0) {
+      this.baristaSpeechTimer -= dt;
+      if (this.baristaSpeechTimer <= 0) {
+        this.baristaSpeech = 'Завариваю свежий чай! 🍵';
+      }
     }
   }
 
   hardReset() {
-    localStorage.removeItem('itea_inc_save_v2');
+    localStorage.removeItem('itea_inc_save_v3');
     window.location.reload();
   }
 }

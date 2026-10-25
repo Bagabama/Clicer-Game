@@ -34,6 +34,8 @@ class GameApp {
     this.sparkActive = false;
     this.sparkTimer = 25;
     this.lastFrameTime = performance.now();
+    this.currentStoryEvent = null;
+    this.isStoryModalOpen = false;
 
     this.init();
   }
@@ -54,6 +56,7 @@ class GameApp {
     this.renderUpgradesList();
     this.renderLayersList();
     this.renderMasteryList();
+    this.checkStoryEvents();
 
     requestAnimationFrame(this.gameLoop.bind(this));
 
@@ -219,6 +222,47 @@ class GameApp {
       });
     }
 
+    // Barista Speech Bubble Tap: dynamic comment
+    const baristaSpeech = document.getElementById('barista-speech');
+    if (baristaSpeech) {
+      baristaSpeech.addEventListener('click', () => {
+        sounds.playClick(2);
+        haptics.tap();
+        const quotes = [
+          'Главный секрет чая — заваривать с душой и без багов! 🍵',
+          'В чайной ITea.inc всегда свежий чай и чистый код! ✨',
+          'Знаете ли вы? Чайная церемония снижает баги на бэкенде на 40%! 🌿',
+          'Чай остывает, если не подливать кипяток! Жми активнее! 🔥',
+          'Каждые 25 уровней модулей утроят твой доход! ⚡'
+        ];
+        this.state.setBaristaSpeech(quotes[Math.floor(Math.random() * quotes.length)]);
+      });
+    }
+
+    // Story Event Dialog Claim Button
+    const btnStoryClaim = document.getElementById('btn-story-claim');
+    if (btnStoryClaim) {
+      btnStoryClaim.addEventListener('click', () => {
+        if (this.currentStoryEvent) {
+          const reward = this.state.completeStoryEvent(this.currentStoryEvent.id);
+          sounds.playGoldenBag();
+          haptics.comboTier();
+
+          const stage = document.getElementById('tab-reactor');
+          const cx = stage ? stage.clientWidth / 2 : 180;
+          const cy = stage ? stage.clientHeight / 2 : 250;
+          this.spawnFloatingNumber(cx, cy, reward, true);
+
+          const modal = document.getElementById('modal-story-event');
+          if (modal) modal.classList.remove('open');
+
+          this.isStoryModalOpen = false;
+          this.currentStoryEvent = null;
+          this.updateUI();
+        }
+      });
+    }
+
     // Supernova / Franchise IPO Button
     const btnSupernova = document.getElementById('btn-supernova-action');
     if (btnSupernova) {
@@ -294,6 +338,15 @@ class GameApp {
   handleCoreTap(clientX, clientY) {
     const tapResult = this.state.performTap(false);
 
+    // Barista bounce micro-interaction
+    const target = document.getElementById('core-touch-target');
+    if (target) {
+      target.style.transform = 'scale(0.92) rotate(-3deg)';
+      setTimeout(() => {
+        target.style.transform = '';
+      }, 90);
+    }
+
     if (tapResult.isCrit) {
       sounds.playCrit();
       haptics.crit();
@@ -306,12 +359,60 @@ class GameApp {
       haptics.tap();
     }
 
+    // Occasional lively barista dialogue if not currently busy
+    if (Math.random() < 0.10 && (!this.state.baristaSpeechTimer || this.state.baristaSpeechTimer <= 0)) {
+      const remarks = [
+        'Завариваю на полную мощность! 🍵',
+        'Аромат листьев просто восхитительный! 🍃',
+        'Кипяток ровно 95°C! Идеально! 🔥',
+        'Чай для Senior-разработчика готов! ☕',
+        'Код пишется в три раза быстрее с чаем! 💻',
+        'Клиент доволен, на чай оставили! ✨'
+      ];
+      this.state.setBaristaSpeech(remarks[Math.floor(Math.random() * remarks.length)]);
+    }
+
     if (this.visualizer) {
       this.visualizer.emitSparks(clientX, clientY, tapResult.isCrit ? 15 : 8, tapResult.isCrit, tapResult.comboMultiplier);
     }
 
     this.spawnFloatingNumber(clientX, clientY, tapResult.damage, tapResult.isCrit);
     this.checkBreachAlert();
+    this.checkStoryEvents();
+  }
+
+  checkStoryEvents() {
+    if (this.isStoryModalOpen) return;
+    const ev = this.state.checkPendingStoryEvent();
+    if (!ev) return;
+
+    this.currentStoryEvent = ev;
+    this.isStoryModalOpen = true;
+
+    const modal = document.getElementById('modal-story-event');
+    if (!modal) return;
+
+    const avatarElem = document.getElementById('story-npc-avatar');
+    if (avatarElem) avatarElem.textContent = ev.avatar || '🧑‍💻';
+
+    const nameElem = document.getElementById('story-npc-name');
+    if (nameElem) nameElem.textContent = ev.author;
+
+    const badgeElem = document.getElementById('story-npc-badge');
+    if (badgeElem) badgeElem.textContent = ev.badge;
+
+    const titleElem = document.getElementById('story-event-title');
+    if (titleElem) titleElem.textContent = ev.title;
+
+    const textElem = document.getElementById('story-event-text');
+    if (textElem) textElem.textContent = `«${ev.text}»`;
+
+    const rewardElem = document.getElementById('story-reward-val');
+    if (rewardElem) rewardElem.textContent = `+${formatNumber(ev.reward)} мл`;
+
+    sounds.playTierUp();
+    haptics.comboTier();
+    modal.classList.add('open');
   }
 
   spawnFloatingNumber(x, y, amount, isCrit) {
@@ -429,22 +530,28 @@ class GameApp {
       const cost = this.state.getUpgradeCost(def);
       const isAffordable = this.state.energy >= cost;
       const nextM = getNextMilestone(rank);
+      const progressPct = nextM ? Math.min(100, (rank / nextM.level) * 100) : 100;
 
       card.innerHTML = `
+        <div class="upgrade-icon-box">${def.icon || '🍵'}</div>
         <div class="upgrade-info">
           <div class="upgrade-title-row">
             <span class="upgrade-name">${def.name}</span>
             <span class="upgrade-rank-tag">Ранг ${rank}</span>
           </div>
           <span class="upgrade-desc">${def.desc}</span>
-          <div class="milestone-strip">
-            <span class="milestone-badge">
-              ${nextM ? `До бонуса x${nextM.mult}: ${rank}/${nextM.level} ур.` : 'МАКС БОНУС'}
-            </span>
+          <div class="milestone-container">
+            <div class="milestone-title-row">
+              <span>${nextM ? `Бонус x${nextM.mult}:` : 'МАКСИМАЛЬНЫЙ БОНУС'}</span>
+              <span>${nextM ? `${rank} / ${nextM.level} ур.` : '★ 100'}</span>
+            </div>
+            <div class="milestone-track">
+              <div class="milestone-fill" style="width: ${progressPct}%"></div>
+            </div>
           </div>
         </div>
         <button id="buy-btn-${def.id}" class="buy-btn" ${isAffordable ? '' : 'disabled'}>
-          <span style="font-size: 0.65rem; opacity: 0.8;">КУПИТЬ</span>
+          <span style="font-size: 0.65rem; opacity: 0.85;">КУПИТЬ</span>
           <span>${formatNumber(cost)} мл</span>
         </button>
       `;
@@ -456,6 +563,7 @@ class GameApp {
           haptics.tap();
           this.updateUpgradeCard(def.id);
           this.updateUI();
+          this.checkStoryEvents();
         }
       });
 
@@ -473,22 +581,27 @@ class GameApp {
     const cost = this.state.getUpgradeCost(def);
     const isAffordable = this.state.energy >= cost;
     const nextM = getNextMilestone(rank);
+    const progressPct = nextM ? Math.min(100, (rank / nextM.level) * 100) : 100;
 
     const rankTag = card.querySelector('.upgrade-rank-tag');
     if (rankTag) rankTag.textContent = `Ранг ${rank}`;
 
-    const milestoneBadge = card.querySelector('.milestone-badge');
-    if (milestoneBadge) {
-      milestoneBadge.textContent = nextM
-        ? `До бонуса x${nextM.mult}: ${rank}/${nextM.level} ур.`
-        : 'МАКС БОНУС';
+    const milestoneTitles = card.querySelectorAll('.milestone-title-row span');
+    if (milestoneTitles.length >= 2) {
+      milestoneTitles[0].textContent = nextM ? `Бонус x${nextM.mult}:` : 'МАКСИМАЛЬНЫЙ БОНУС';
+      milestoneTitles[1].textContent = nextM ? `${rank} / ${nextM.level} ур.` : '★ 100';
+    }
+
+    const milestoneFill = card.querySelector('.milestone-fill');
+    if (milestoneFill) {
+      milestoneFill.style.width = `${progressPct}%`;
     }
 
     const buyBtn = card.querySelector(`#buy-btn-${id}`);
     if (buyBtn) {
       buyBtn.disabled = !isAffordable;
       buyBtn.innerHTML = `
-        <span style="font-size: 0.65rem; opacity: 0.8;">КУПИТЬ</span>
+        <span style="font-size: 0.65rem; opacity: 0.85;">КУПИТЬ</span>
         <span>${formatNumber(cost)} мл</span>
       `;
     }
@@ -691,6 +804,14 @@ class GameApp {
       }
     });
 
+    // 8. Barista Speech Bubble
+    const baristaSpeechElem = document.getElementById('barista-speech');
+    if (baristaSpeechElem && this.state.baristaSpeech) {
+      if (baristaSpeechElem.textContent !== this.state.baristaSpeech) {
+        baristaSpeechElem.textContent = this.state.baristaSpeech;
+      }
+    }
+
     this.updateSkillsUI();
   }
 
@@ -700,6 +821,7 @@ class GameApp {
 
     this.state.update(dt);
     this.updateSpark(dt);
+    this.checkStoryEvents();
 
     if (this.visualizer) {
       this.visualizer.render(this.state, dt);

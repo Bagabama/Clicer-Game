@@ -115,7 +115,7 @@ MASCOT_LORE = [
     "Опять прод упал? Ща заварю пуэр, всё починим."
 ]
 
-# Mascot image loader
+# Asset loaders (Cozy Cafe BG, Anime Barista, Mascot Cat)
 mascot_surf = None
 if os.path.exists("assets/mascot.jpg"):
     try:
@@ -123,6 +123,61 @@ if os.path.exists("assets/mascot.jpg"):
         mascot_surf = pygame.transform.smoothscale(raw_img, (54, 54))
     except Exception as e:
         print("Could not load mascot image:", e)
+
+cafe_bg_surf = None
+if os.path.exists("assets/cafe_bg.jpg"):
+    try:
+        raw_bg = pygame.image.load("assets/cafe_bg.jpg")
+        cafe_bg_surf = pygame.transform.smoothscale(raw_bg, (WIDTH, HEIGHT))
+    except Exception as e:
+        print("Could not load cafe bg:", e)
+
+barista_surf = None
+if os.path.exists("assets/barista.jpg"):
+    try:
+        raw_barista = pygame.image.load("assets/barista.jpg")
+        barista_surf = pygame.transform.smoothscale(raw_barista, (180, 180))
+    except Exception as e:
+        print("Could not load barista image:", e)
+
+# Customer Story Dialogues
+STORY_EVENTS = [
+    {
+        "id": "story_start",
+        "author": "Стажер Максим (Junior)",
+        "text": "Здравствуйте! Сказали, без кружки чая пулл-реквест не примут... Держите чаевые!",
+        "reward": 150,
+        "trigger": lambda s: s.total_tea >= 50
+    },
+    {
+        "id": "story_lvl10",
+        "author": "Аня (Frontend Ninja)",
+        "text": "Ложечка крутится со скоростью 60 FPS! Доход за клик удвоился (x2)!",
+        "reward": 800,
+        "trigger": lambda s: any(r >= 10 for r in s.upgrades.values())
+    },
+    {
+        "id": "story_lvl25",
+        "author": "Денис (Senior Backend)",
+        "text": "25-й уровень утроил (x3) весь чайный поток компании! Бэкенд выдержал!",
+        "reward": 5000,
+        "trigger": lambda s: any(r >= 25 for r in s.upgrades.values())
+    },
+    {
+        "id": "story_tier2",
+        "author": "Сисадмин Петрович",
+        "text": "Офисный кулер пропатчен! Врубай Оверклок чайника на 100°C!",
+        "reward": 12000,
+        "trigger": lambda s: s.current_tier_idx >= 1
+    },
+    {
+        "id": "story_lvl50",
+        "author": "Тимлид Артем",
+        "text": "Спринт закрыт досрочно благодаря чаю! Множитель клика вырос в 4 раза!",
+        "reward": 60000,
+        "trigger": lambda s: any(r >= 50 for r in s.upgrades.values())
+    }
+]
 
 class Particle:
     def __init__(self, x, y, is_crit=False, color=TEA_GREEN):
@@ -213,6 +268,8 @@ class GameState:
 
         self.lore_text = MASCOT_LORE[0]
         self.lore_timer = 10
+        self.active_story = None
+        self.completed_stories = set()
 
         self.load()
 
@@ -224,12 +281,15 @@ class GameState:
         return (1 + self.supernova_count * 1.5) * (1 + self.gtl * 0.20)
 
     def calculate_base_click(self):
-        power = 1.0
+        base_click_sum = 0.0
+        global_milestone_mult = 1.0
         for u in UPGRADE_DEFS:
             rank = self.upgrades[u["id"]]
             if rank > 0:
-                milestone_mult = get_milestone_multiplier(rank)
-                power += rank * u["clickBonus"] * milestone_mult
+                base_click_sum += rank * u["clickBonus"]
+                global_milestone_mult *= get_milestone_multiplier(rank)
+
+        power = (1.0 + base_click_sum) * global_milestone_mult
 
         if self.current_tier_idx >= 1:
             power *= 1.25
@@ -244,14 +304,18 @@ class GameState:
         return max(1.0, power)
 
     def calculate_passive(self):
-        passive = 0.0
+        base_passive = 0.0
+        global_milestone_mult = 1.0
         for u in UPGRADE_DEFS:
             rank = self.upgrades[u["id"]]
-            if rank > 0:
-                milestone_mult = get_milestone_multiplier(rank)
-                passive += rank * u["passiveBonus"] * milestone_mult
-        passive *= self.get_prestige_mult()
-        return passive
+            if rank > 0 and u["passiveBonus"] > 0:
+                base_passive += rank * u["passiveBonus"]
+                global_milestone_mult *= get_milestone_multiplier(rank)
+
+        if base_passive <= 0:
+            return 0.0
+
+        return base_passive * global_milestone_mult * self.get_prestige_mult()
 
     def get_upgrade_cost(self, u_def):
         rank = self.upgrades[u_def["id"]]
@@ -393,6 +457,13 @@ class GameState:
             self.lore_text = random.choice(MASCOT_LORE)
             self.lore_timer = 12
 
+        # Story events check
+        if not self.active_story:
+            for ev in STORY_EVENTS:
+                if ev["id"] not in self.completed_stories and ev["trigger"](self):
+                    self.active_story = ev
+                    break
+
     def save(self):
         data = {
             "energy": self.energy,
@@ -461,6 +532,18 @@ def main():
 
             elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 mx, my = event.pos
+
+                # Story dialogue modal click
+                if state.active_story:
+                    modal_y = HEIGHT // 2 - 110
+                    claim_rect = pygame.Rect(WIDTH // 2 - 100, modal_y + 155, 200, 42)
+                    if claim_rect.collidepoint(mx, my):
+                        reward = state.active_story["reward"]
+                        state.add_energy(reward)
+                        floating_texts.append(FloatingText(WIDTH // 2, HEIGHT // 2, f"+{format_number(reward)} мл", True))
+                        state.completed_stories.add(state.active_story["id"])
+                        state.active_story = None
+                    continue
 
                 # Tab Buttons at bottom
                 if my >= HEIGHT - 55:
@@ -531,7 +614,13 @@ def main():
         if shake_timer > 0:
             screen_shake_offset = (random.randint(-4, 4), random.randint(-4, 4))
 
-        screen.fill(BG_DEEP)
+        if cafe_bg_surf:
+            screen.blit(cafe_bg_surf, (0, 0))
+            overlay = pygame.Surface((WIDTH, HEIGHT), pygame.SRCALPHA)
+            overlay.fill((246, 250, 246, 215)) # Light porcelain wash
+            screen.blit(overlay, (0, 0))
+        else:
+            screen.fill(BG_DEEP)
 
         # 1. Header (Brand & Stats)
         header_surf = pygame.Surface((WIDTH, 50))
@@ -581,35 +670,44 @@ def main():
             pygame.draw.rect(screen, (0, 0, 0), (18, 162, WIDTH - 36, 6), border_radius=3)
             pygame.draw.rect(screen, TEA_AMBER, (18, 162, int((WIDTH - 36) * (state.heat / state.max_heat)), 6), border_radius=3)
 
-            # Center Mug Render
+            # Center Target (Anime Barista with steam & speech bubble)
             cx = WIDTH // 2 + screen_shake_offset[0]
             cy = HEIGHT // 2 - 20 + screen_shake_offset[1]
 
             # Steam
-            if random.random() < 0.4:
-                steam_particles.append(SteamParticle(cx, cy - 65))
+            if random.random() < 0.35:
+                steam_particles.append(SteamParticle(cx, cy - 80))
             for sp in steam_particles[:]:
                 sp.update()
                 sp.draw(screen)
                 if sp.life <= 0:
                     steam_particles.remove(sp)
 
-            # Mug handle
-            pygame.draw.circle(screen, (30, 48, 35), (cx + 60, cy), 32, 10)
-            pygame.draw.circle(screen, TEA_GREEN, (cx + 60, cy), 32, 2)
+            # Circular Barista Portrait
+            if barista_surf:
+                pygame.draw.circle(screen, (255, 255, 255), (cx, cy), 94)
+                pygame.draw.circle(screen, TEA_GREEN, (cx, cy), 95, 3)
+                screen.blit(barista_surf, (cx - 90, cy - 90))
 
-            # Mug body
-            mug_rect = pygame.Rect(cx - 55, cy - 60, 110, 120)
-            pygame.draw.rect(screen, (16, 26, 18), mug_rect, border_radius=20)
-            pygame.draw.rect(screen, TEA_GREEN, mug_rect, 3, border_radius=20)
-
-            # Liquid inside
-            liquid_color = TEA_ORANGE if temp_c >= 90 else TEA_AMBER
-            liquid_rect = pygame.Rect(cx - 48, cy - 10, 96, 62)
-            pygame.draw.rect(screen, liquid_color, liquid_rect, border_radius=12)
-
-            # Tea leaf on cup
-            pygame.draw.circle(screen, (255, 255, 255), (cx, cy + 20), 10)
+                # Speech Bubble
+                bubble_w, bubble_h = 240, 28
+                bx = cx - bubble_w // 2
+                by = cy - 130
+                pygame.draw.rect(screen, (255, 255, 255), (bx, by, bubble_w, bubble_h), border_radius=12)
+                pygame.draw.rect(screen, TEA_GREEN, (bx, by, bubble_w, bubble_h), 1, border_radius=12)
+                bubble_txt = font_tiny.render("«Завариваю свежий чай! 🍵»", True, (16, 46, 28))
+                screen.blit(bubble_txt, (cx - bubble_txt.get_width() // 2, by + 7))
+            else:
+                # Fallback mug
+                pygame.draw.circle(screen, (30, 48, 35), (cx + 60, cy), 32, 10)
+                pygame.draw.circle(screen, TEA_GREEN, (cx + 60, cy), 32, 2)
+                mug_rect = pygame.Rect(cx - 55, cy - 60, 110, 120)
+                pygame.draw.rect(screen, (16, 26, 18), mug_rect, border_radius=20)
+                pygame.draw.rect(screen, TEA_GREEN, mug_rect, 3, border_radius=20)
+                liquid_color = TEA_ORANGE if temp_c >= 90 else TEA_AMBER
+                liquid_rect = pygame.Rect(cx - 48, cy - 10, 96, 62)
+                pygame.draw.rect(screen, liquid_color, liquid_rect, border_radius=12)
+                pygame.draw.circle(screen, (255, 255, 255), (cx, cy + 20), 10)
 
             # Stats above boosters
             click_p = state.calculate_base_click() * state.combo_mult
@@ -778,7 +876,39 @@ def main():
             ico_r = font_mid.render(t_ico, True, TEA_GREEN if is_sel else TEXT_DIM)
             lbl_r = font_tiny.render(t_label, True, TEA_GREEN if is_sel else TEXT_DIM)
             screen.blit(ico_r, (tx + tab_w // 2 - ico_r.get_width() // 2, nav_y + 8))
-            screen.blit(lbl_r, (tx + tab_w // 2 - lbl_r.get_width() // 2, nav_y + 30))
+        # 6. STORY POPUP MODAL
+        if state.active_story:
+            overlay = pygame.Surface((WIDTH, HEIGHT), pygame.SRCALPHA)
+            overlay.fill((0, 0, 0, 160))
+            screen.blit(overlay, (0, 0))
+
+            modal_w, modal_h = WIDTH - 50, 230
+            modal_x = 25
+            modal_y = HEIGHT // 2 - modal_h // 2
+
+            pygame.draw.rect(screen, (255, 255, 255), (modal_x, modal_y, modal_w, modal_h), border_radius=18)
+            pygame.draw.rect(screen, (16, 185, 129), (modal_x, modal_y, modal_w, modal_h), 2, border_radius=18)
+
+            author_r = font_mid.render(f"💬 {state.active_story['author']}:", True, (16, 46, 28))
+            screen.blit(author_r, (modal_x + 18, modal_y + 18))
+
+            text_lines = [
+                state.active_story['text'][:38],
+                state.active_story['text'][38:76],
+                state.active_story['text'][76:115]
+            ]
+            for l_idx, line in enumerate(text_lines):
+                if line:
+                    line_r = font_small.render(line, True, (40, 60, 48))
+                    screen.blit(line_r, (modal_x + 18, modal_y + 46 + l_idx * 20))
+
+            reward_r = font_mid.render(f"Бонусные чаевые: +{format_number(state.active_story['reward'])} мл", True, (217, 119, 6))
+            screen.blit(reward_r, (modal_x + 18, modal_y + 118))
+
+            claim_rect = pygame.Rect(WIDTH // 2 - 100, modal_y + 160, 200, 42)
+            pygame.draw.rect(screen, (16, 185, 129), claim_rect, border_radius=12)
+            btn_txt = font_mid.render("ПРИНЯТЬ ЧАЙ 🍵", True, (255, 255, 255))
+            screen.blit(btn_txt, (claim_rect.centerx - btn_txt.get_width() // 2, claim_rect.centery - btn_txt.get_height() // 2))
 
         pygame.display.flip()
 

@@ -3,17 +3,17 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <meta name="theme-color" content="#050d07" />
+  <meta name="theme-color" content="#f4f7f4" />
   <meta name="mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <title>ITea.inc: Silicon Valley Tea Tycoon & Tea_VPN</title>
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <title>ITea.inc: Cozy Anime Tea Cafe & Tea_VPN</title>
   <link rel="icon" type="image/svg+xml" href="/icon.svg" />
   <link rel="manifest" href="/manifest.json" />
   <link rel="stylesheet" href="/src/style.css" />
 </head>
 <body>
   <div id="app-frame">
-    <!-- TOP HEADER -->
+    <!-- TOP HEADER (Clean Light Porcelain Glass) -->
     <header class="header-bar">
       <div class="brand-badge">
         <img src="/icon.svg" alt="ITea" class="brand-icon" />
@@ -26,7 +26,7 @@
       </div>
     </header>
 
-    <!-- TEA_VPN SPONSOR AD BANNER -->
+    <!-- TEA_VPN SPONSOR AD BANNER (Clean Cyan Card) -->
     <div id="tea-vpn-banner" class="tea-vpn-banner" title="Нажми, чтобы получить спонсорский буст от Tea_VPN!">
       <div class="vpn-left-col">
         <span class="vpn-shield-icon">🛡️</span>
@@ -40,20 +40,7 @@
       </div>
     </div>
 
-    <!-- MASCOT & MINI-LORE DIALOGUE STRIP -->
-    <div id="mascot-bar" class="mascot-bar" title="Нажми на кота, чтобы получить совет!">
-      <div class="mascot-avatar-wrapper">
-        <img src="/mascot.jpg" alt="Кот Заваркин" class="mascot-avatar-img" />
-        <span class="mascot-status-dot"></span>
-      </div>
-      <div class="mascot-bubble">
-        <div id="mascot-text" class="mascot-text">
-          Мяу! Добро пожаловать в ITea.inc! Кликай кружку, заваривай чай!
-        </div>
-      </div>
-    </div>
-
-    <!-- TEA VOLUME DASHBOARD -->
+    <!-- TEA VOLUME DASHBOARD (Light Warm Porcelain Card) -->
     <section class="resource-dashboard">
       <span class="energy-label">ОБЪЁМ ЗАВАРКИ ITEA</span>
       <div class="energy-display">
@@ -90,7 +77,7 @@
       </div>
     </section>
 
-    <!-- BOIL TEMPERATURE & COMBO GAUGE -->
+    <!-- BOIL TEMPERATURE GAUGE -->
     <section class="combo-gauge-wrapper">
       <div class="combo-gauge-header">
         <span class="combo-label">🔥 ТЕМПЕРАТУРА КИПЕНИЯ:</span>
@@ -101,18 +88,31 @@
       </div>
     </section>
 
-    <!-- TAB 1: SMART MUG STAGE (MAIN ACTIVE CLICKER) -->
+    <!-- TAB 1: MAIN STAGE - ANIME BARISTA CHARACTER (CLICK TARGET) -->
     <main id="tab-reactor" class="tab-content-area active stage-container">
       <canvas id="core-canvas"></canvas>
-      <div id="core-touch-target" class="core-touch-target" role="button" aria-label="Tap Tea Mug"></div>
+
+      <!-- Central Animated Barista Character -->
+      <div id="barista-container" class="barista-character-stage">
+        <!-- Dynamic Speech Bubble -->
+        <div id="barista-speech" class="barista-speech-bubble">
+          Завариваю свежий чай! 🍵
+        </div>
+        
+        <!-- Character Avatar & Touch Area -->
+        <div id="core-touch-target" class="barista-click-target" role="button" aria-label="Tap Barista to Brew">
+          <img src="/barista.jpg" alt="Бариста" class="barista-avatar-img" />
+          <div class="tap-ripple-effect"></div>
+        </div>
+      </div>
+
       <div id="floating-numbers" class="floating-numbers-layer"></div>
       
       <!-- Golden Tea Bag Floating Anomaly -->
       <div id="spark-anomaly" class="spark-anomaly" style="display: none;" title="Золотой пакетик ITea!">🍵</div>
 
-      <!-- ACTIVE BOOSTER QUICK-BAR (WITH CLEAR TOOLTIPS & DESCRIPTIONS) -->
+      <!-- ACTIVE BOOSTER QUICK-BAR -->
       <div class="skill-bar-wrapper">
-        <div id="booster-hint" class="booster-hint">Нажми на бустер, чтобы активировать его эффект:</div>
         <div class="skill-bar">
           <div id="skill-overdrive" class="skill-btn" data-skill="overdrive">
             <span class="skill-btn-icon">🔥</span>
@@ -136,13 +136,13 @@
       </div>
     </main>
 
-    <!-- TAB 2: ITEA UPGRADE MODULES (WITH MILESTONES) -->
+    <!-- TAB 2: UPGRADES WITH MILESTONE PROGRESS (BEAUTIFUL LIGHT CARDS) -->
     <section id="tab-upgrades" class="tab-content-area">
-      <div style="font-size: 0.74rem; color: var(--text-dim); text-transform: uppercase; font-weight: 700; margin-bottom: 2px;">
-        ⚙️ ОБОРУДОВАНИЕ И ЧАЙНЫЕ ИННОВАЦИИ
-      </div>
-      <div style="font-size: 0.68rem; color: var(--tea-amber); margin-bottom: 6px;">
-        💡 Каждые 10, 25, 50, 100, 175... уровней навык получает множитель x2, x3, x4!
+      <div class="upgrades-header-card">
+        <span style="font-weight: 800; color: #1a2e22; font-size: 0.82rem;">⚙️ ЧАЙНЫЕ ИННОВАЦИИ И МОДУЛИ</span>
+        <span style="font-size: 0.7rem; color: #d97706; margin-top: 2px;">
+          💡 Уровни 10, 25, 50, 100 дают огромные множители x2, x3, x4!
+        </span>
       </div>
       <div id="upgrades-list" style="display: flex; flex-direction: column; gap: 8px;">
         <!-- Populated dynamically -->
@@ -151,8 +151,9 @@
 
     <!-- TAB 3: CEREMONIAL TIERS ROADMAP -->
     <section id="tab-layers" class="tab-content-area">
-      <div style="font-size: 0.74rem; color: var(--text-dim); text-transform: uppercase; font-weight: 700; margin-bottom: 4px;">
-        🏆 10 ЧАЙНЫХ ГРЕЙДОВ ITEA.INC (ЦЕЛЬ ИГРЫ)
+      <div class="upgrades-header-card">
+        <span style="font-weight: 800; color: #1a2e22; font-size: 0.82rem;">🏆 10 ЧАЙНЫХ ГРЕЙДОВ ITEA.INC (ЦЕЛЬ ИГРЫ)</span>
+        <span style="font-size: 0.7rem; color: #2d6a4f;">Освойте все 10 сортов чая для выхода на биржу!</span>
       </div>
       <div id="layers-list" style="display: flex; flex-direction: column; gap: 8px;">
         <!-- Populated dynamically -->
@@ -163,26 +164,26 @@
     <section id="tab-supernova" class="tab-content-area">
       <div class="supernova-hero">
         <span class="supernova-hero-title">📈 ВЫХОД ITEA.INC НА IPO (ПРЕСТИЖ)</span>
-        <p style="font-size: 0.74rem; color: var(--text-dim); max-width: 290px;">
-          Зафиксируйте прибыль текущей чайной компании, чтобы получить <strong>Золотые Чайные Листья (GTL)</strong>. 
+        <p style="font-size: 0.75rem; color: #4b6354; max-width: 290px;">
+          Зафиксируйте прибыль текущей чайной сети, чтобы получить <strong>Золотые Чайные Листья (GTL)</strong>. 
           Престиж <strong>умножает</strong> базовый клик в разы навсегда!
         </p>
         
         <!-- Prestige Reset Scaling Tracker -->
-        <div style="width: 100%; margin: 6px 0; padding: 8px; background: rgba(0, 0, 0, 0.4); border-radius: 10px; border: 1px solid var(--border-glass);">
-          <div style="display: flex; justify-content: space-between; font-size: 0.72rem; color: var(--text-dim); margin-bottom: 4px;">
+        <div style="width: 100%; margin: 6px 0; padding: 10px; background: rgba(255, 255, 255, 0.75); border-radius: 12px; border: 1px solid rgba(45, 106, 79, 0.15);">
+          <div style="display: flex; justify-content: space-between; font-size: 0.74rem; color: #2d6a4f; margin-bottom: 4px; font-weight: 700;">
             <span>Цель текущего цикла:</span>
-            <span id="prestige-cycle-progress-txt" style="font-family: 'JetBrains Mono', monospace; color: var(--tea-green);">0 / 500 K мл</span>
+            <span id="prestige-cycle-progress-txt" style="font-family: 'JetBrains Mono', monospace; color: #15803d;">0 / 500 K мл</span>
           </div>
-          <div class="layer-bar-bg">
-            <div id="prestige-cycle-bar" class="layer-bar-fill" style="width: 0%; background: linear-gradient(90deg, #ffb703, #ffd166);"></div>
+          <div class="layer-bar-bg" style="background: rgba(0, 0, 0, 0.08);">
+            <div id="prestige-cycle-bar" class="layer-bar-fill" style="width: 0%; background: linear-gradient(90deg, #f59e0b, #10b981);"></div>
           </div>
-          <div style="font-size: 0.7rem; color: var(--text-muted); margin-top: 4px;">
-            Текущий множитель франшизы: <strong id="current-prestige-mult" style="color: #fff;">x1.0</strong>
+          <div style="font-size: 0.72rem; color: #475569; margin-top: 6px;">
+            Множитель франшизы: <strong id="current-prestige-mult" style="color: #0f172a;">x1.0</strong>
           </div>
         </div>
 
-        <div style="font-family: 'JetBrains Mono', monospace; font-size: 0.95rem; font-weight: 800; color: var(--crit-gold); margin: 4px 0;">
+        <div style="font-family: 'JetBrains Mono', monospace; font-size: 1.05rem; font-weight: 800; color: #d97706; margin: 4px 0;">
           Доступно на IPO: <span id="pending-sdm-val">0</span> GTL
         </div>
         <button id="btn-supernova-action" class="rebirth-action-btn" disabled>
@@ -190,19 +191,19 @@
         </button>
       </div>
 
-      <div style="font-size: 0.74rem; color: var(--text-dim); text-transform: uppercase; font-weight: 700; margin-top: 6px; margin-bottom: 4px;">
-        🍃 СОВЕТ ДИРЕКТОРОВ ITEA (ПОСТОЯННЫЕ АКЦИИ)
+      <div class="upgrades-header-card" style="margin-top: 4px;">
+        <span style="font-weight: 800; color: #1a2e22; font-size: 0.8rem;">🍃 СОВЕТ ДИРЕКТОРОВ ITEA (ПОСТОЯННЫЕ АКЦИИ)</span>
       </div>
       <div id="mastery-list" style="display: flex; flex-direction: column; gap: 8px;">
         <!-- Populated dynamically -->
       </div>
     </section>
 
-    <!-- BOTTOM NAVIGATION -->
+    <!-- BOTTOM NAVIGATION (Clean Frosted Glass) -->
     <nav class="nav-bar">
       <button class="nav-item active" data-tab="tab-reactor">
         <span class="nav-icon">🍵</span>
-        <span class="nav-label">Кружка</span>
+        <span class="nav-label">Бариста</span>
       </button>
       <button class="nav-item" data-tab="tab-upgrades">
         <span class="nav-icon">⚡</span>
@@ -218,24 +219,46 @@
       </button>
     </nav>
 
+    <!-- MODAL: STORY DIALOGUE WITH CUSTOMER / NPC (NEW FEATURE) -->
+    <div id="modal-story-event" class="modal-overlay">
+      <div class="modal-card story-modal-card">
+        <div class="story-npc-avatar" id="story-npc-avatar">🧑‍💻</div>
+        <div class="story-npc-header">
+          <span id="story-npc-name" class="story-npc-name">Стажер Максим</span>
+          <span id="story-npc-badge" class="story-npc-badge">Junior Dev</span>
+        </div>
+        <div id="story-event-title" class="story-event-title">Первый гость чайной!</div>
+        <div id="story-event-text" class="story-event-text">
+          «Здравствуйте! Я стажер на испытательном сроке. Сказали, без кружки чая пулл-реквест не примут... Держите первые чаевые!»
+        </div>
+        <div class="story-reward-box">
+          <span style="font-size: 0.72rem; color: #64748b;">БОНУСНЫЕ ЧАЕВЫЕ:</span>
+          <strong id="story-reward-val" style="color: #059669; font-size: 1.1rem; font-family: 'JetBrains Mono', monospace;">+150 мл</strong>
+        </div>
+        <button id="btn-story-claim" class="modal-btn" style="background: linear-gradient(135deg, #10b981, #059669); color: #fff;">
+          ПРИНЯТЬ И УГОСТИТЬ ЧАЕМ 🍵
+        </button>
+      </div>
+    </div>
+
     <!-- MODAL: TEA_VPN COMMERCIAL AD SPONSOR -->
     <div id="modal-vpn-ad" class="modal-overlay">
       <div class="modal-card vpn-ad-card">
         <div class="vpn-ad-logo">🛡️</div>
-        <div style="font-size: 1.15rem; font-weight: 900; color: var(--vpn-cyan); letter-spacing: 1px;">
+        <div style="font-size: 1.15rem; font-weight: 900; color: #0284c7; letter-spacing: 0.5px;">
           Tea_VPN: РЕКЛАМА СПОНСОРА
         </div>
-        <div style="font-size: 0.8rem; color: #d0f4ff; margin-top: 6px; line-height: 1.4;">
+        <div style="font-size: 0.8rem; color: #334155; margin-top: 6px; line-height: 1.4;">
           «РКН заблокировал кулер в офисе? Включи <strong>Tea_VPN</strong>! 
-          Шифрование ChaCha20-Tea защитит твой пар и снизит пинг до чайных плантаций Цейлона до 2мс!»
+          Шифрование ChaCha20-Tea защитит твой пар и снизит пинг до Цейлона до 2мс!»
         </div>
         <div class="vpn-timer-bar">
           <div id="vpn-ad-timer-fill" class="vpn-timer-fill"></div>
         </div>
-        <div id="vpn-ad-status" style="font-size: 0.72rem; color: var(--text-dim); margin-top: 4px;">
+        <div id="vpn-ad-status" style="font-size: 0.72rem; color: #64748b; margin-top: 4px;">
           Туннелирование чая... (3 сек)
         </div>
-        <button id="btn-vpn-ad-claim" class="modal-btn" style="background: var(--vpn-cyan); display: none; margin-top: 8px;">
+        <button id="btn-vpn-ad-claim" class="modal-btn" style="background: #0284c7; color: #fff; display: none; margin-top: 8px;">
           ЗАБРАТЬ +50% ТУРБО-КИПЕНИЕ!
         </button>
       </div>
@@ -249,8 +272,8 @@
           <span id="booster-info-title">Описание Бустера</span>
         </div>
         <div class="modal-body">
-          <p id="booster-info-desc" style="font-size: 0.85rem; color: #fff;"></p>
-          <div style="margin-top: 8px; font-size: 0.75rem; color: var(--tea-amber);">
+          <p id="booster-info-desc" style="font-size: 0.85rem; color: #1e293b;"></p>
+          <div style="margin-top: 8px; font-size: 0.75rem; color: #d97706;">
             Длительность: <strong id="booster-info-duration"></strong> | Перезарядка: <strong id="booster-info-cd"></strong>
           </div>
         </div>
@@ -266,15 +289,15 @@
           <span>ЧАЙ ОСТЫЛ И ПОКРЫЛСЯ ПЛЁНКОЙ!</span>
         </div>
         <div class="modal-body">
-          <p>Пока вы были офлайн (<span id="offline-time" style="color: #fff; font-weight: 700;"></span>):</p>
-          <p style="margin-top: 6px; color: var(--tea-amber);">
+          <p>Пока вы были офлайн (<span id="offline-time" style="color: #0f172a; font-weight: 700;"></span>):</p>
+          <p style="margin-top: 6px; color: #d97706;">
             ⚠️ В ваше отсутствие никто не подливал кипяток. Чай остыл, а производительность упала до <strong>5%</strong>.
           </p>
           <p style="margin-top: 8px;">
-            Накапало чая: <strong id="offline-earned" style="color: var(--tea-green); font-family: 'JetBrains Mono', monospace;">0 мл</strong>
+            Накапало чая: <strong id="offline-earned" style="color: #059669; font-family: 'JetBrains Mono', monospace;">0 мл</strong>
           </p>
-          <p style="margin-top: 6px; font-size: 0.74rem; color: var(--text-muted);">
-            Совет Заваркина: Горячий чай пьют свежим! Активное ручное заваривание приносит в 50 раз больше дохода!
+          <p style="margin-top: 6px; font-size: 0.74rem; color: #64748b;">
+            Совет: Горячий чай пьют свежим! Активное ручное заваривание приносит в десятки раз больше дохода!
           </p>
         </div>
         <button id="btn-offline-confirm" class="modal-btn">РАЗОГРЕТЬ ЧАЙНИК</button>
@@ -283,17 +306,17 @@
 
     <!-- MODAL: CEREMONIAL TIER UNLOCK CELEBRATION -->
     <div id="modal-breach" class="modal-overlay">
-      <div class="modal-card" style="border-color: var(--tea-green);">
-        <div class="modal-title" style="color: var(--tea-green);">
+      <div class="modal-card" style="border-color: #10b981;">
+        <div class="modal-title" style="color: #059669;">
           <span>🎉</span>
           <span>НОВЫЙ ЧАЙНЫЙ ГРЕЙД ITEA!</span>
         </div>
         <div class="modal-body">
-          <p id="breach-layer-title" style="font-size: 0.95rem; font-weight: 800; color: #ffffff;"></p>
-          <p id="breach-layer-desc" style="margin-top: 6px; color: var(--text-dim);"></p>
-          <div style="margin-top: 10px; padding: 10px; background: rgba(112, 224, 0, 0.1); border-radius: 10px; border: 1px solid var(--border-glass);">
-            <span style="font-size: 0.7rem; color: var(--text-dim); text-transform: uppercase;">Разблокированная чайная инновация:</span>
-            <div id="breach-perk-text" style="font-weight: 700; color: var(--tea-green); margin-top: 3px;"></div>
+          <p id="breach-layer-title" style="font-size: 0.95rem; font-weight: 800; color: #0f172a;"></p>
+          <p id="breach-layer-desc" style="margin-top: 6px; color: #475569;"></p>
+          <div style="margin-top: 10px; padding: 10px; background: rgba(16, 185, 129, 0.1); border-radius: 10px; border: 1px solid rgba(16, 185, 129, 0.25);">
+            <span style="font-size: 0.7rem; color: #64748b; text-transform: uppercase;">Разблокированная инновация:</span>
+            <div id="breach-perk-text" style="font-weight: 700; color: #059669; margin-top: 3px;"></div>
           </div>
         </div>
         <button id="btn-breach-confirm" class="modal-btn">ПРИНЯТЬ СОРТ В МЕНЮ</button>
@@ -309,19 +332,19 @@
         </div>
         <div class="modal-body" style="display: flex; flex-direction: column; gap: 10px;">
           <div style="display: flex; justify-content: space-between; align-items: center;">
-            <span>Звуки заварки</span>
+            <span style="color: #1e293b; font-weight: 600;">Звуковые эффекты</span>
             <button id="toggle-sound-settings" class="icon-btn" style="width: auto; padding: 0 10px;">ВКЛ</button>
           </div>
           <div style="display: flex; justify-content: space-between; align-items: center;">
-            <span>Тактильная отдача (Вибрация)</span>
+            <span style="color: #1e293b; font-weight: 600;">Тактильная отдача (Вибрация)</span>
             <button id="toggle-haptics-settings" class="icon-btn" style="width: auto; padding: 0 10px;">ВКЛ</button>
           </div>
-          <div style="border-top: 1px solid rgba(255, 255, 255, 0.1); padding-top: 10px;">
-            <p style="font-size: 0.72rem; color: var(--text-muted); margin-bottom: 6px;">
-              Статистика компании: Чашек: <span id="stat-total-clicks">0</span> | Идеальных заварок: <span id="stat-total-crits">0</span>
+          <div style="border-top: 1px solid rgba(0, 0, 0, 0.1); padding-top: 10px;">
+            <p style="font-size: 0.72rem; color: #64748b; margin-bottom: 6px;">
+              Статистика: Кликов: <span id="stat-total-clicks">0</span> | Критов: <span id="stat-total-crits">0</span>
             </p>
-            <button id="btn-hard-reset" class="modal-btn" style="background: rgba(255, 0, 85, 0.2); color: #ff0055; border: 1px solid #ff0055; width: 100%;">
-              СБРОСИТЬ ВСЮ КОРПОРАЦИЮ
+            <button id="btn-hard-reset" class="modal-btn" style="background: rgba(239, 68, 68, 0.15); color: #dc2626; border: 1px solid #ef4444; width: 100%;">
+              СБРОСИТЬ ВЕСЬ ПРОГРЕСС
             </button>
           </div>
         </div>

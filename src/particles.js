@@ -180,99 +180,38 @@ export class CoreVisualizer {
       ctx.restore();
     }
 
-    // 3. Tea_VPN Orbiting Cyber Rings (Secure Infusion Mesh)
+    // 3. Ambient Tea Aroma Halo around Barista
     ctx.save();
     ctx.translate(cx, cy);
     ctx.rotate(this.orbitAngle);
     ctx.beginPath();
-    ctx.arc(0, 0, 115, 0, Math.PI * 2);
-    ctx.strokeStyle = state.isVpnActive ? '#00f0ff' : 'rgba(112, 224, 0, 0.35)';
+    ctx.arc(0, 0, 110, 0, Math.PI * 2);
+    ctx.strokeStyle = state.isVpnActive ? '#0284c7' : (heatRatio > 0.8 ? '#f59e0b' : 'rgba(16, 185, 129, 0.4)');
     ctx.lineWidth = 2.5;
-    ctx.setLineDash([20, 15, 6, 15]);
+    ctx.setLineDash([16, 12, 6, 12]);
     ctx.stroke();
 
-    // Orbiting VPN Encryption Nodes
+    // Orbiting Tea Nodes
     for (let i = 0; i < 3; i++) {
       ctx.rotate((Math.PI * 2) / 3);
-      ctx.fillStyle = state.isVpnActive ? '#00f0ff' : '#70e000';
+      ctx.fillStyle = state.isVpnActive ? '#0284c7' : (heatRatio > 0.8 ? '#f59e0b' : '#10b981');
       ctx.shadowColor = ctx.fillStyle;
-      ctx.shadowBlur = 10;
+      ctx.shadowBlur = 8;
       ctx.beginPath();
-      ctx.arc(115, 0, 6, 0, Math.PI * 2);
+      ctx.arc(110, 0, 5, 0, Math.PI * 2);
       ctx.fill();
     }
     ctx.restore();
 
-    // 4. Smart Mug Render (Central Clickable Object)
-    ctx.save();
-    const mugW = 120;
-    const mugH = 130;
-    const mugX = cx - mugW / 2;
-    const mugY = cy - mugH / 2;
-
-    // Handle
-    ctx.beginPath();
-    ctx.lineWidth = 14;
-    ctx.strokeStyle = '#1b2a1e';
-    ctx.arc(cx + 65, cy, 32, -Math.PI / 2.3, Math.PI / 2.3);
-    ctx.stroke();
-    ctx.lineWidth = 3;
-    ctx.strokeStyle = '#70e000';
-    ctx.stroke();
-
-    // Mug Outer Body (Ceramic / Dark Glass)
-    ctx.fillStyle = '#0f1812';
-    ctx.strokeStyle = state.isVpnActive ? '#00f0ff' : (heatRatio > 0.8 ? '#ffb703' : '#70e000');
-    ctx.lineWidth = 4;
-    ctx.shadowColor = ctx.strokeStyle;
-    ctx.shadowBlur = 15;
-
-    ctx.beginPath();
-    ctx.roundRect(mugX, mugY, mugW, mugH, [8, 8, 32, 32]);
-    ctx.fill();
-    ctx.stroke();
-
-    // Tea Liquid inside the Mug
-    const liquidH = mugH * 0.72;
-    const liquidY = mugY + (mugH - liquidH) - 4;
-    const liquidGrad = ctx.createLinearGradient(0, liquidY, 0, liquidY + liquidH);
-
-    if (heatRatio > 0.75) {
-      liquidGrad.addColorStop(0, '#ffd166');
-      liquidGrad.addColorStop(0.5, '#fb8500');
-      liquidGrad.addColorStop(1, '#d45b00');
-    } else {
-      liquidGrad.addColorStop(0, '#ffb703');
-      liquidGrad.addColorStop(0.5, '#70e000');
-      liquidGrad.addColorStop(1, '#38b000');
-    }
-
-    ctx.save();
-    ctx.beginPath();
-    ctx.roundRect(mugX + 8, liquidY, mugW - 16, liquidH, [4, 4, 26, 26]);
-    ctx.fillStyle = liquidGrad;
-    ctx.shadowBlur = 0;
-    ctx.fill();
-
-    // Tea Leaf Emblazoned on Mug
-    const leafX = cx;
-    const leafY = cy + 18;
-    ctx.fillStyle = '#ffffff';
-    ctx.globalAlpha = 0.9;
-    ctx.beginPath();
-    ctx.moveTo(leafX, leafY - 18);
-    ctx.quadraticCurveTo(leafX - 18, leafY, leafX, leafY + 18);
-    ctx.quadraticCurveTo(leafX + 18, leafY, leafX, leafY - 18);
-    ctx.fill();
-    ctx.restore();
-
-    // 5. Boiling Bubbles inside tea liquid
+    // 4. Boiling Aroma Bubbles & Steam Spikes
     this.bubbleTimer += dt * (2 + heatRatio * 8);
-    if (this.bubbleTimer > 0.4) {
+    if (this.bubbleTimer > 0.35) {
       this.bubbleTimer = 0;
+      const angle = Math.random() * Math.PI * 2;
+      const dist = 95 + Math.random() * 20;
       this.sparks.push({
-        x: mugX + 18 + Math.random() * (mugW - 36),
-        y: liquidY + liquidH - 8,
+        x: cx + Math.cos(angle) * dist,
+        y: cy + Math.sin(angle) * dist,
         vx: (Math.random() - 0.5) * 0.6,
         vy: -(Math.random() * 2 + 1 + heatRatio * 3),
         size: Math.random() * 3 + 2,
