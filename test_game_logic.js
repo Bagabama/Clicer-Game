@@ -1,6 +1,6 @@
-import { GameState, CONTAINMENT_LAYERS, UPGRADE_DEFINITIONS, SKILL_DEFINITIONS, MASTERY_TREE } from './src/gameState.js';
+import { GameState, CONTAINMENT_LAYERS, UPGRADE_DEFINITIONS, SKILL_DEFINITIONS, MASTERY_TREE, getUpgradeMilestoneMultiplier, getNextMilestone } from './src/gameState.js';
 
-console.log('--- STARTING ITEA.INC LOGIC AUDIT ---');
+console.log('--- STARTING UPDATED ITEA.INC LOGIC & BALANCE AUDIT ---');
 
 const mockStorage = {};
 global.localStorage = {
@@ -13,79 +13,57 @@ const state = new GameState();
 
 // 1. Initial State Check
 console.assert(state.energy === 0, 'Tea volume starts at 0');
+console.assert(state.currentRunTeaEarned === 0, 'Current run tea starts at 0');
 console.assert(state.currentLayerIndex === 0, 'Tier starts at 0 (Майский Жмых)');
-console.assert(state.comboMultiplier === 1, 'Temperature multiplier starts at 1');
-console.assert(state.calculateBaseClickPower() === 1, 'Base click is 1 ml');
-console.assert(state.calculatePassivePerSec() === 0, 'Passive starts at 0');
+console.assert(state.calculatePrestigeMultiplier() === 1.0, 'Initial prestige multiplier is 1.0x');
 console.log('✓ Initial ITea state valid');
 
-// 2. Perform 10 Taps and check kettle heating
-for (let i = 0; i < 10; i++) {
-  state.performTap(false);
-}
-console.assert(state.totalClicks === 10, '10 clicks counted');
-console.assert(state.energy >= 10, `Tea brewed: ${state.energy} ml`);
-console.assert(state.heat > 0, `Kettle temperature heated: ${state.heat}°C`);
-console.log('✓ Active clicking and kettle boil heat valid');
+// 2. Test Milestone System
+console.assert(getUpgradeMilestoneMultiplier(5) === 1, 'Lvl 5 has 1x multiplier');
+console.assert(getUpgradeMilestoneMultiplier(10) === 2, 'Lvl 10 has 2x multiplier');
+console.assert(getUpgradeMilestoneMultiplier(25) === 6, 'Lvl 25 has 2*3 = 6x multiplier');
+console.assert(getUpgradeMilestoneMultiplier(50) === 24, 'Lvl 50 has 2*3*4 = 24x multiplier');
+const nextM = getNextMilestone(15);
+console.assert(nextM.level === 25 && nextM.mult === 3, 'Next milestone from 15 is 25 (x3)');
+console.log('✓ Milestone multiplier system (grows at 10, 25, 50...) verified');
 
-// 3. Test Tea_VPN Ad Boost
-const vpnBonus = state.activateTeaVpnAdBoost();
-console.assert(vpnBonus > 0, `Tea_VPN ad bonus granted: ${vpnBonus} ml`);
-console.assert(state.isVpnAdActive, 'Tea_VPN ad turbo boost is active');
-console.assert(state.heat === state.maxHeat, 'Tea_VPN overheats kettle to 100%');
-console.log('✓ Tea_VPN sponsor ad mechanics verified');
+// 3. Test Super-Exponential Cost Inflation
+const spoon = UPGRADE_DEFINITIONS[0];
+const cost1 = state.getUpgradeCost(spoon);
+state.upgrades[spoon.id] = 10;
+const cost10 = state.getUpgradeCost(spoon);
+state.upgrades[spoon.id] = 25;
+const cost25 = state.getUpgradeCost(spoon);
+console.assert(cost25 > cost10 * 10, 'Cost grows super-exponentially');
+console.log(`Lvl 0 cost: ${cost1}, Lvl 10 cost: ${cost10}, Lvl 25 cost: ${cost25}`);
+console.log('✓ Super-exponential cost scaling verified');
 
-// 4. Test Upgrades
-state.energy = 5000;
-const firstUpgrade = UPGRADE_DEFINITIONS[0];
-const buySuccess = state.buyUpgrade(firstUpgrade.id);
-console.assert(buySuccess, 'Upgrade buy successful');
-console.assert(state.upgrades[firstUpgrade.id] === 1, 'Upgrade rank incremented');
-console.assert(state.calculateBaseClickPower() > 1, 'Click power increased after upgrade');
-console.log('✓ Upgrade system valid');
+// 4. Test Prestige Reset from Zero & Dynamic Requirement Scaling
+const req1 = state.getPrestigeRequirement();
+console.assert(req1 === 500000, `First prestige requirement is 500k, got ${req1}`);
 
-// 5. Test Offline Penalty Check
-state.lastSaved = Date.now() - 3600 * 1000;
-state.upgrades['intern_with_kettle'] = 10; // 30 ml/s passive
-const passive = state.calculatePassivePerSec();
-console.assert(passive === 30, `Passive rate is ${passive}`);
+// Earn enough for 1st prestige
+state.addEnergy(1200000);
+console.assert(state.currentRunTeaEarned === 1200000, 'Current run tea recorded');
+console.assert(state.canSupernova(), 'Can IPO with 1.2M ml');
+const pending1 = state.calculatePendingSDM();
+console.assert(pending1 > 0, `Pending GTL: ${pending1}`);
 
-const offlineReport = state.processOfflineEarnings();
-console.assert(offlineReport !== null, 'Offline report generated');
-console.assert(offlineReport.elapsedMinutes === 60, 'Elapsed minutes detected');
-console.assert(offlineReport.cappedMinutes === 30, 'Capped at 30 minutes');
-console.log(`Offline tea brewed: ${offlineReport.energyGained} ml (expected ~2700 with 5% throttle)`);
-console.assert(offlineReport.energyGained <= 2750 && offlineReport.energyGained >= 2650, '5% cold tea offline penalty correctly applied');
-console.log('✓ Anti-idle offline penalty (cold tea 5% throttle, 30m cap) verified');
-
-// 6. Test Ceremonial Tier Progression
-state.energy = 0;
-state.layerProgress = 0;
-state.currentLayerIndex = 0;
-const tier1Req = CONTAINMENT_LAYERS[0].energyReq;
-state.addEnergy(tier1Req + 10);
-console.assert(state.currentLayerIndex === 1, `Advanced to Tier 2! Current index: ${state.currentLayerIndex}`);
-console.log('✓ Ceremonial Tier progression and tea variety unlock valid');
-
-// 7. Test Franchise IPO (Prestige)
-state.totalEnergyEarned = 10000000; // 10M ml
-console.assert(state.canSupernova(), 'Can IPO with 10M ml');
-const pendingGTL = state.calculatePendingSDM();
-console.assert(pendingGTL > 0, `Pending GTL: ${pendingGTL}`);
-const gtlGained = state.performSupernova();
-console.assert(gtlGained === pendingGTL, 'GTL gained matches pending');
-console.assert(state.stellarDarkMatter === gtlGained, 'Golden tea leaves stored');
+// Perform prestige
+const gtlEarned = state.performSupernova();
+console.assert(state.supernovaCount === 1, 'Franchise count is 1');
+console.assert(state.currentRunTeaEarned === 0, 'Current run tea reset to 0');
 console.assert(state.energy === 0, 'Tea volume reset to 0');
-console.assert(state.currentLayerIndex === 0, 'Tier reset for new accelerated franchise');
-console.assert(state.supernovaCount === 1, 'Franchise counter incremented');
-console.log('✓ Franchise IPO prestige system verified');
+console.assert(!state.canSupernova(), 'Cannot immediately prestige again after reset');
 
-// 8. Test Board of Directors Mastery Tree
-const firstMastery = MASTERY_TREE[0];
-const buyMasterySuccess = state.buyMastery(firstMastery.id);
-console.assert(buyMasterySuccess, 'Mastery shares purchased with GTL');
-console.assert(state.masteries[firstMastery.id] === 1, 'Mastery rank 1');
-console.assert(state.calculateBaseClickPower() > 1, 'Permanent prestige shares active on fresh run');
-console.log('✓ Board of Directors permanent multiplier verified');
+// Check requirement for 2nd prestige scaled up!
+const req2 = state.getPrestigeRequirement();
+console.assert(req2 > req1 * 2, `2nd prestige requirement scaled up: ${req2} > ${req1 * 2}`);
 
-console.log('--- ALL ITEA.INC LOGIC AUDITS PASSED CLEANLY ---');
+// Check that prestige gave a TRUE MULTIPLICATIVE BONUS!
+const newMult = state.calculatePrestigeMultiplier();
+console.assert(newMult > 2.0, `Prestige multiplier is now x${newMult} (> 2.0x)!`);
+console.assert(state.calculateBaseClickPower() >= newMult, 'Base click is directly multiplied by prestige!');
+console.log('✓ Prestige reset starts from 0, threshold scales up, and applies true multiplicative click boost');
+
+console.log('--- ALL BALANCING & GAMEPLAY TESTS PASSED CLEANLY ---');

@@ -1,14 +1,13 @@
 /**
  * ITea.inc: Silicon Valley Tea Tycoon & Tea_VPN
- * Main Controller, Game Loop, Tea_VPN Ads, Canvas & Audio Events
+ * Main Controller with Mascot, Milestones, Booster Modals & True Prestige Scaling
  */
 
-import { GameState, CONTAINMENT_LAYERS, UPGRADE_DEFINITIONS, SKILL_DEFINITIONS, MASTERY_TREE } from './gameState.js';
+import { GameState, CONTAINMENT_LAYERS, UPGRADE_DEFINITIONS, SKILL_DEFINITIONS, MASTERY_TREE, getUpgradeMilestoneMultiplier, getNextMilestone, MASCOT_LORE } from './gameState.js';
 import { CoreVisualizer } from './particles.js';
 import { sounds } from './audio.js';
 import { haptics } from './haptics.js';
 
-// Number formatting utility for tea volumes
 export function formatNumber(num) {
   if (num === null || num === undefined || isNaN(num)) return '0';
   if (num < 1000) {
@@ -46,7 +45,6 @@ class GameApp {
       this.visualizer = new CoreVisualizer(this.canvas);
     }
 
-    // Check offline earnings
     const offlineReport = this.state.processOfflineEarnings();
     if (offlineReport && offlineReport.energyGained > 0) {
       this.showOfflineModal(offlineReport);
@@ -71,6 +69,19 @@ class GameApp {
         e.preventDefault();
         sounds.ensureContext();
         this.handleCoreTap(e.clientX, e.clientY);
+      });
+    }
+
+    // Mascot Tap: cycle lore & play chime
+    const mascotBar = document.getElementById('mascot-bar');
+    if (mascotBar) {
+      mascotBar.addEventListener('click', () => {
+        sounds.playClick(3);
+        haptics.tap();
+        const randLore = MASCOT_LORE[Math.floor(Math.random() * MASCOT_LORE.length)];
+        this.state.setLore(randLore);
+        const mascotText = document.getElementById('mascot-text');
+        if (mascotText) mascotText.textContent = randLore;
       });
     }
 
@@ -113,11 +124,20 @@ class GameApp {
       });
     });
 
-    // Skills Quick-Bar
+    // Booster Buttons with Click & Info
     SKILL_DEFINITIONS.forEach(def => {
       const btn = document.getElementById(`skill-${def.id}`);
       if (btn) {
         btn.addEventListener('click', () => {
+          const isUnlocked = (this.state.currentLayerIndex + 1) >= def.reqLayer;
+          const skill = this.state.skills[def.id];
+
+          if (!isUnlocked || (skill && skill.cooldownTimer > 0)) {
+            // Show booster explanation modal
+            this.openBoosterInfoModal(def, isUnlocked);
+            return;
+          }
+
           if (this.state.activateSkill(def.id)) {
             if (def.id === 'vpn_tunnel') {
               sounds.playVpnConnect();
@@ -132,6 +152,13 @@ class GameApp {
         });
       }
     });
+
+    // Booster Info Modal Close
+    const btnBoosterInfoClose = document.getElementById('btn-booster-info-close');
+    const modalBoosterInfo = document.getElementById('modal-booster-info');
+    if (btnBoosterInfoClose && modalBoosterInfo) {
+      btnBoosterInfoClose.addEventListener('click', () => modalBoosterInfo.classList.remove('open'));
+    }
 
     // Sound toggle
     const btnSound = document.getElementById('btn-sound');
@@ -198,7 +225,7 @@ class GameApp {
       btnSupernova.addEventListener('click', () => {
         if (this.state.canSupernova()) {
           const sdm = this.state.calculatePendingSDM();
-          if (confirm(`Выйти на IPO? Вы получите +${sdm} Золотых Листьев (GTL) для покупки акций в Совете Директоров, а объём заварки будет сброшен для новой супер-франшизы!`)) {
+          if (confirm(`Выйти на IPO? Вы получите +${sdm} Золотых Листьев (GTL). Базовый клик будет умножен на x${this.state.calculatePrestigeMultiplier().toFixed(1)}, а текущий объём сбросится с нуля для новой франшизы!`)) {
             this.state.performSupernova();
             sounds.playRebirth();
             haptics.supernova();
@@ -212,7 +239,18 @@ class GameApp {
     }
   }
 
-  // Tea_VPN Ad commercial modal flow
+  openBoosterInfoModal(def, isUnlocked) {
+    const modal = document.getElementById('modal-booster-info');
+    if (!modal) return;
+    document.getElementById('booster-info-title').textContent = def.name;
+    document.getElementById('booster-info-desc').textContent = isUnlocked
+      ? def.desc
+      : `🔒 Заблокировано! Требуется открыть ${CONTAINMENT_LAYERS[def.reqLayer - 1].name} (Грейд ${def.reqLayer}).\n\nЭффект: ${def.desc}`;
+    document.getElementById('booster-info-duration').textContent = `${def.duration} сек.`;
+    document.getElementById('booster-info-cd').textContent = `${def.cooldown} сек.`;
+    modal.classList.add('open');
+  }
+
   openTeaVpnAdModal() {
     const modal = document.getElementById('modal-vpn-ad');
     const timerFill = document.getElementById('vpn-ad-timer-fill');
@@ -222,13 +260,11 @@ class GameApp {
     if (!modal) return;
     modal.classList.add('open');
 
-    // Reset ad animation
     timerFill.style.transition = 'none';
     timerFill.style.width = '0%';
     claimBtn.style.display = 'none';
     statusText.textContent = 'Туннелирование чая через Tea_VPN... (3 сек)';
 
-    // Trigger timer fill
     setTimeout(() => {
       timerFill.style.transition = 'width 3s linear';
       timerFill.style.width = '100%';
@@ -332,11 +368,13 @@ class GameApp {
 
     const baseClick = this.state.calculateBaseClickPower();
     const sparkRank = this.state.masteries['tea_bag_flux'] || 0;
-    const sparkMultiplier = 1 + sparkRank * 0.5;
+    const sparkMultiplier = 1 + sparkRank * 0.75;
 
-    const reward = baseClick * 35 * this.state.getMaxComboMultiplier() * sparkMultiplier;
+    const reward = baseClick * 40 * this.state.getMaxComboMultiplier() * sparkMultiplier;
     this.state.addEnergy(reward);
-    this.state.heat = this.state.maxHeat; // Full boil!
+    this.state.heat = this.state.maxHeat;
+
+    this.state.setLore('Заваркин: «Ура! Золотой пакетик пойман! Чайник раскалён до кипения!»');
 
     if (this.visualizer) {
       this.visualizer.triggerBreachEffect();
@@ -390,6 +428,7 @@ class GameApp {
       const rank = this.state.upgrades[def.id] || 0;
       const cost = this.state.getUpgradeCost(def);
       const isAffordable = this.state.energy >= cost;
+      const nextM = getNextMilestone(rank);
 
       card.innerHTML = `
         <div class="upgrade-info">
@@ -398,6 +437,11 @@ class GameApp {
             <span class="upgrade-rank-tag">Ранг ${rank}</span>
           </div>
           <span class="upgrade-desc">${def.desc}</span>
+          <div class="milestone-strip">
+            <span class="milestone-badge">
+              ${nextM ? `До бонуса x${nextM.mult}: ${rank}/${nextM.level} ур.` : 'МАКС БОНУС'}
+            </span>
+          </div>
         </div>
         <button id="buy-btn-${def.id}" class="buy-btn" ${isAffordable ? '' : 'disabled'}>
           <span style="font-size: 0.65rem; opacity: 0.8;">КУПИТЬ</span>
@@ -428,9 +472,17 @@ class GameApp {
     const rank = this.state.upgrades[id] || 0;
     const cost = this.state.getUpgradeCost(def);
     const isAffordable = this.state.energy >= cost;
+    const nextM = getNextMilestone(rank);
 
     const rankTag = card.querySelector('.upgrade-rank-tag');
     if (rankTag) rankTag.textContent = `Ранг ${rank}`;
+
+    const milestoneBadge = card.querySelector('.milestone-badge');
+    if (milestoneBadge) {
+      milestoneBadge.textContent = nextM
+        ? `До бонуса x${nextM.mult}: ${rank}/${nextM.level} ур.`
+        : 'МАКС БОНУС';
+    }
 
     const buyBtn = card.querySelector(`#buy-btn-${id}`);
     if (buyBtn) {
@@ -562,7 +614,13 @@ class GameApp {
       sdmElem.textContent = `${formatNumber(this.state.stellarDarkMatter)} GTL`;
     }
 
-    // 3. Current Ceremonial Tier
+    // 3. Mascot Dialogue
+    const mascotText = document.getElementById('mascot-text');
+    if (mascotText && mascotText.textContent !== this.state.currentLore) {
+      mascotText.textContent = this.state.currentLore;
+    }
+
+    // 4. Current Ceremonial Tier
     const currentLayer = CONTAINMENT_LAYERS[this.state.currentLayerIndex];
     if (currentLayer) {
       const layerBadge = document.getElementById('layer-badge');
@@ -579,7 +637,7 @@ class GameApp {
       if (layerFill) layerFill.style.width = `${pct}%`;
     }
 
-    // 4. Boil Temperature
+    // 5. Boil Temperature
     const comboVal = document.getElementById('combo-multiplier-val');
     if (comboVal) {
       const heatRatio = this.state.heat / this.state.maxHeat;
@@ -593,7 +651,25 @@ class GameApp {
       comboFill.style.width = `${heatPct}%`;
     }
 
-    // 5. Franchise IPO Pending GTL
+    // 6. Franchise IPO Pending GTL & Cycle Progress (0% to 100%)
+    const prestigeReq = this.state.getPrestigeRequirement();
+    const cycleProgress = Math.min(100, (this.state.currentRunTeaEarned / prestigeReq) * 100);
+
+    const cycleTxt = document.getElementById('prestige-cycle-progress-txt');
+    if (cycleTxt) {
+      cycleTxt.textContent = `${formatNumber(this.state.currentRunTeaEarned)} / ${formatNumber(prestigeReq)} мл`;
+    }
+
+    const cycleBar = document.getElementById('prestige-cycle-bar');
+    if (cycleBar) {
+      cycleBar.style.width = `${cycleProgress.toFixed(1)}%`;
+    }
+
+    const prestigeMultTxt = document.getElementById('current-prestige-mult');
+    if (prestigeMultTxt) {
+      prestigeMultTxt.textContent = `x${this.state.calculatePrestigeMultiplier().toFixed(2)}`;
+    }
+
     const pendingSDM = this.state.calculatePendingSDM();
     const pendingSDMElem = document.getElementById('pending-sdm-val');
     if (pendingSDMElem) pendingSDMElem.textContent = formatNumber(pendingSDM);
@@ -603,7 +679,7 @@ class GameApp {
       btnSupernova.disabled = pendingSDM <= 0;
     }
 
-    // 6. Upgrades affordability
+    // 7. Upgrades affordability
     UPGRADE_DEFINITIONS.forEach(def => {
       const card = document.getElementById(`upgrade-card-${def.id}`);
       if (card) {

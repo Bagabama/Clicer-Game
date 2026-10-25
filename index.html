@@ -40,6 +40,19 @@
       </div>
     </div>
 
+    <!-- MASCOT & MINI-LORE DIALOGUE STRIP -->
+    <div id="mascot-bar" class="mascot-bar" title="Нажми на кота, чтобы получить совет!">
+      <div class="mascot-avatar-wrapper">
+        <img src="/mascot.jpg" alt="Кот Заваркин" class="mascot-avatar-img" />
+        <span class="mascot-status-dot"></span>
+      </div>
+      <div class="mascot-bubble">
+        <div id="mascot-text" class="mascot-text">
+          Мяу! Добро пожаловать в ITea.inc! Кликай кружку, заваривай чай!
+        </div>
+      </div>
+    </div>
+
     <!-- TEA VOLUME DASHBOARD -->
     <section class="resource-dashboard">
       <span class="energy-label">ОБЪЁМ ЗАВАРКИ ITEA</span>
@@ -97,30 +110,39 @@
       <!-- Golden Tea Bag Floating Anomaly -->
       <div id="spark-anomaly" class="spark-anomaly" style="display: none;" title="Золотой пакетик ITea!">🍵</div>
 
-      <!-- ACTIVE SKILL BAR -->
-      <div class="skill-bar">
-        <div id="skill-overdrive" class="skill-btn" data-skill="overdrive">
-          <span class="skill-btn-icon">🔥</span>
-          <span class="skill-btn-name">Оверклок</span>
-          <div class="skill-cooldown-overlay">0s</div>
-        </div>
-        <div id="skill-vpn_tunnel" class="skill-btn locked" data-skill="vpn_tunnel">
-          <span class="skill-btn-icon">🛡️</span>
-          <span class="skill-btn-name">Tea_VPN</span>
-          <div class="skill-cooldown-overlay">0s</div>
-        </div>
-        <div id="skill-tea_typhoon" class="skill-btn locked" data-skill="tea_typhoon">
-          <span class="skill-btn-icon">🌪️</span>
-          <span class="skill-btn-name">Тайфун</span>
-          <div class="skill-cooldown-overlay">0s</div>
+      <!-- ACTIVE BOOSTER QUICK-BAR (WITH CLEAR TOOLTIPS & DESCRIPTIONS) -->
+      <div class="skill-bar-wrapper">
+        <div id="booster-hint" class="booster-hint">Нажми на бустер, чтобы активировать его эффект:</div>
+        <div class="skill-bar">
+          <div id="skill-overdrive" class="skill-btn" data-skill="overdrive">
+            <span class="skill-btn-icon">🔥</span>
+            <span class="skill-btn-name">Оверклок</span>
+            <span class="skill-btn-desc">100°C (x7.5)</span>
+            <div class="skill-cooldown-overlay">0s</div>
+          </div>
+          <div id="skill-vpn_tunnel" class="skill-btn locked" data-skill="vpn_tunnel">
+            <span class="skill-btn-icon">🛡️</span>
+            <span class="skill-btn-name">Tea_VPN</span>
+            <span class="skill-btn-desc">Клик x4</span>
+            <div class="skill-cooldown-overlay">0s</div>
+          </div>
+          <div id="skill-tea_typhoon" class="skill-btn locked" data-skill="tea_typhoon">
+            <span class="skill-btn-icon">🌪️</span>
+            <span class="skill-btn-name">Тайфун</span>
+            <span class="skill-btn-desc">100% Крит</span>
+            <div class="skill-cooldown-overlay">0s</div>
+          </div>
         </div>
       </div>
     </main>
 
-    <!-- TAB 2: ITEA UPGRADE MODULES -->
+    <!-- TAB 2: ITEA UPGRADE MODULES (WITH MILESTONES) -->
     <section id="tab-upgrades" class="tab-content-area">
-      <div style="font-size: 0.74rem; color: var(--text-dim); text-transform: uppercase; font-weight: 700; margin-bottom: 4px;">
+      <div style="font-size: 0.74rem; color: var(--text-dim); text-transform: uppercase; font-weight: 700; margin-bottom: 2px;">
         ⚙️ ОБОРУДОВАНИЕ И ЧАЙНЫЕ ИННОВАЦИИ
+      </div>
+      <div style="font-size: 0.68rem; color: var(--tea-amber); margin-bottom: 6px;">
+        💡 Каждые 10, 25, 50, 100, 175... уровней навык получает множитель x2, x3, x4!
       </div>
       <div id="upgrades-list" style="display: flex; flex-direction: column; gap: 8px;">
         <!-- Populated dynamically -->
@@ -140,15 +162,31 @@
     <!-- TAB 4: FRANCHISE IPO & BOARD OF DIRECTORS -->
     <section id="tab-supernova" class="tab-content-area">
       <div class="supernova-hero">
-        <span class="supernova-hero-title">📈 ВЫХОД ITEA.INC НА IPO</span>
+        <span class="supernova-hero-title">📈 ВЫХОД ITEA.INC НА IPO (ПРЕСТИЖ)</span>
         <p style="font-size: 0.74rem; color: var(--text-dim); max-width: 290px;">
-          Зафиксируйте прибыль текущей чайной компании, чтобы получить <strong>Золотые Чайные Листья (GTL)</strong> для покупки акций и постоянных перков Совета Директоров!
+          Зафиксируйте прибыль текущей чайной компании, чтобы получить <strong>Золотые Чайные Листья (GTL)</strong>. 
+          Престиж <strong>умножает</strong> базовый клик в разы навсегда!
         </p>
+        
+        <!-- Prestige Reset Scaling Tracker -->
+        <div style="width: 100%; margin: 6px 0; padding: 8px; background: rgba(0, 0, 0, 0.4); border-radius: 10px; border: 1px solid var(--border-glass);">
+          <div style="display: flex; justify-content: space-between; font-size: 0.72rem; color: var(--text-dim); margin-bottom: 4px;">
+            <span>Цель текущего цикла:</span>
+            <span id="prestige-cycle-progress-txt" style="font-family: 'JetBrains Mono', monospace; color: var(--tea-green);">0 / 500 K мл</span>
+          </div>
+          <div class="layer-bar-bg">
+            <div id="prestige-cycle-bar" class="layer-bar-fill" style="width: 0%; background: linear-gradient(90deg, #ffb703, #ffd166);"></div>
+          </div>
+          <div style="font-size: 0.7rem; color: var(--text-muted); margin-top: 4px;">
+            Текущий множитель франшизы: <strong id="current-prestige-mult" style="color: #fff;">x1.0</strong>
+          </div>
+        </div>
+
         <div style="font-family: 'JetBrains Mono', monospace; font-size: 0.95rem; font-weight: 800; color: var(--crit-gold); margin: 4px 0;">
           Доступно на IPO: <span id="pending-sdm-val">0</span> GTL
         </div>
         <button id="btn-supernova-action" class="rebirth-action-btn" disabled>
-          ОТКРЫТЬ ФРАНШИЗУ (ПРЕСТИЖ)
+          ОТКРЫТЬ ФРАНШИЗУ (СБРОС)
         </button>
       </div>
 
@@ -203,6 +241,23 @@
       </div>
     </div>
 
+    <!-- MODAL: BOOSTER DETAILS MODAL -->
+    <div id="modal-booster-info" class="modal-overlay">
+      <div class="modal-card">
+        <div class="modal-title">
+          <span id="booster-info-icon">⚡</span>
+          <span id="booster-info-title">Описание Бустера</span>
+        </div>
+        <div class="modal-body">
+          <p id="booster-info-desc" style="font-size: 0.85rem; color: #fff;"></p>
+          <div style="margin-top: 8px; font-size: 0.75rem; color: var(--tea-amber);">
+            Длительность: <strong id="booster-info-duration"></strong> | Перезарядка: <strong id="booster-info-cd"></strong>
+          </div>
+        </div>
+        <button id="btn-booster-info-close" class="modal-btn">ПОНЯТНО</button>
+      </div>
+    </div>
+
     <!-- MODAL: OFFLINE REPORT -->
     <div id="modal-offline" class="modal-overlay">
       <div class="modal-card">
@@ -219,7 +274,7 @@
             Накапало чая: <strong id="offline-earned" style="color: var(--tea-green); font-family: 'JetBrains Mono', monospace;">0 мл</strong>
           </p>
           <p style="margin-top: 6px; font-size: 0.74rem; color: var(--text-muted);">
-            Совет ITea.inc: Горячий чай пьют свежим! Активное ручное заваривание приносит в 50 раз больше дохода!
+            Совет Заваркина: Горячий чай пьют свежим! Активное ручное заваривание приносит в 50 раз больше дохода!
           </p>
         </div>
         <button id="btn-offline-confirm" class="modal-btn">РАЗОГРЕТЬ ЧАЙНИК</button>
